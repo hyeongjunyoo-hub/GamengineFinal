@@ -4,7 +4,7 @@ public class KickHitboxController : MonoBehaviour
 {
     [Header("발차기 설정")]
     public float kickForce = 30f; // 공을 찰 때의 힘
-    public float kickUpwardForce = 5f; // 공을 위로 띄우는 힘
+    public float kickUpwardForce = 8f; // 공을 위로 띄우는 힘
 
     private PlayerKick playerKick; // 플레이어 스크립트 참조
 
@@ -22,8 +22,9 @@ public class KickHitboxController : MonoBehaviour
     // 이 Hitbox가 다른 Collider와 만났을 때 호출됩니다. (Is Trigger가 켜져 있어야 함)
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 1. 부딪힌 오브젝트가 "Ball" 태그를 가지고 있는지 확인합니다.
-        if (other.CompareTag("Ball"))
+        // 1. 이 히트박스가 활성화 상태이고, 부딪힌 오브젝트가 "Ball" 태그를 가지고 있는지 확인합니다.
+        // gameObject.activeInHierarchy는 이 게임오브젝트가 씬에서 활성화 상태일 때만 true가 됩니다.
+        if (gameObject.activeInHierarchy && other.CompareTag("Ball"))
         {
             Debug.Log("공과 충돌!");
 

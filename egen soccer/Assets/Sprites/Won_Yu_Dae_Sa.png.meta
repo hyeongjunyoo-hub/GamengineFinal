@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 7_0
+      name: Won_Yu_Dae_Sa_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 448
-        height: 768
+        x: 140
+        y: 118
+        width: 265
+        height: 535
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2e49c2cb003180b4380a8fc5dcf896d4
-      internalID: 1935322032
+      spriteID: c71d7b838407f204ba9ece7daf54e82a
+      internalID: -1429462679
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 7_1
+      name: Won_Yu_Dae_Sa_1
       rect:
         serializedVersion: 2
-        x: 448
-        y: 0
-        width: 448
-        height: 768
+        x: 536
+        y: 119
+        width: 261
+        height: 535
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a892ed37b70af445bd98f5f3012b1a6
-      internalID: 23607510
+      spriteID: be52beec64423cd4092e72f9bfa5c55e
+      internalID: 2096062266
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 7_2
+      name: Won_Yu_Dae_Sa_2
       rect:
         serializedVersion: 2
-        x: 896
-        y: 0
-        width: 448
-        height: 768
+        x: 900
+        y: 121
+        width: 343
+        height: 517
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,8 +169,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 355d838679978304495f438efeeff9ba
-      internalID: -1360014773
+      spriteID: 143caaa1f0d6f6848b37cc8e731920ee
+      internalID: 747404749
       vertices: []
       indices: 
       edges: []
@@ -189,11 +189,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":448.0,"y":768.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      7_0: 1935322032
-      7_1: 23607510
-      7_2: -1360014773
+      Won_Yu_Dae_Sa_0: -1429462679
+      Won_Yu_Dae_Sa_1: 2096062266
+      Won_Yu_Dae_Sa_2: 747404749
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

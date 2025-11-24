@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 4_0
+      name: Jeon_Doo_Kong_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 234
-        height: 949
+        x: 15
+        y: 243
+        width: 176
+        height: 339
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ceed0aad2205dd4494d2fca9b57ed2b
-      internalID: -1785085051
+      spriteID: e7201da9e6af4ba4696095dc3b9db49f
+      internalID: 1665486677
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 4_1
+      name: Jeon_Doo_Kong_1
       rect:
         serializedVersion: 2
-        x: 234
-        y: 0
-        width: 234
-        height: 949
+        x: 236
+        y: 243
+        width: 224
+        height: 339
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,8 +147,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 758163ca0372345458c94f7b626f7a3f
-      internalID: -333469068
+      spriteID: 297d3627f89ab4c4b8addbe4fb93eaac
+      internalID: -264640227
       vertices: []
       indices: 
       edges: []
@@ -167,10 +167,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":234.0,"y":949.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      4_0: -1785085051
-      4_1: -333469068
+      Jeon_Doo_Kong_0: 1665486677
+      Jeon_Doo_Kong_1: -264640227
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
