@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c956300b5bb646b49ac528fc785641c3
+guid: be5183d5b572999428a0d0933da5c52e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 39.8
+  spritePixelsToUnits: 22
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,17 +93,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_6sp8kj6sp8kj6sp8_0
+      name: fkdfkdgdgdgdssdd_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 448
-        height: 768
+        x: 19
+        y: 1
+        width: 114
+        height: 220
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,52 +125,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f79b83b1365e189489035dfb8f3695cf
-      internalID: 2010949328
+      spriteID: f9840e92cc49dca40bc3fe5e3fbb866d
+      internalID: 1082543860
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gemini_Generated_Image_6sp8kj6sp8kj6sp8_1
+      name: fkdfkdgdgdgdssdd_1
       rect:
         serializedVersion: 2
-        x: 448
-        y: 0
-        width: 448
-        height: 768
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 152
+        y: 1
+        width: 119
+        height: 220
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c34c332bbbd45df49885f718c1fd88e4
-      internalID: -98048442
+      spriteID: fe90e3131ffd8024287c2881bfbd4921
+      internalID: -1607921805
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gemini_Generated_Image_6sp8kj6sp8kj6sp8_2
+      name: fkdfkdgdgdgdssdd_2
       rect:
         serializedVersion: 2
-        x: 896
-        y: 0
-        width: 448
-        height: 768
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 285
+        y: 2
+        width: 150
+        height: 219
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0fbe151e7b1d1440aa1920f0f7e5684
-      internalID: 1268081548
+      spriteID: 06bc9700b9c3b8a49b33712118ca7271
+      internalID: -1264619569
       vertices: []
       indices: 
       edges: []
@@ -166,7 +179,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ea9b402406cfce24db705c8667ee9790
+    spriteID: 94e4500084a499649bacfc97174cf63a
     internalID: 0
     vertices: []
     indices: 
@@ -176,11 +189,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":448.0,"y":768.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":341.0,"y":513.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Gemini_Generated_Image_6sp8kj6sp8kj6sp8_0: 2010949328
-      Gemini_Generated_Image_6sp8kj6sp8kj6sp8_1: -98048442
-      Gemini_Generated_Image_6sp8kj6sp8kj6sp8_2: 1268081548
+      fkdfkdgdgdgdssdd_0: 1082543860
+      fkdfkdgdgdgdssdd_1: -1607921805
+      fkdfkdgdgdgdssdd_2: -1264619569
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

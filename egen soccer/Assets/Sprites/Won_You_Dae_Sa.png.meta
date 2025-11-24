@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8fe47e160a2f97047bbed7e0898cfbc2
+guid: e3160e85b2701c24ba4935dc22d38984
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 55
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,17 +93,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: jm_0
+      name: 7_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 149
-        height: 255
+        width: 448
+        height: 768
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a22d961bd07564a47ab2d3ff72e6bfbd
-      internalID: 1580118611
+      spriteID: 2e49c2cb003180b4380a8fc5dcf896d4
+      internalID: 1935322032
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jm_1
+      name: 7_1
       rect:
         serializedVersion: 2
-        x: 149
+        x: 448
         y: 0
-        width: 149
-        height: 255
+        width: 448
+        height: 768
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -134,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e567ee7f9780aa340b7892672160ee1a
-      internalID: -21694155
+      spriteID: 7a892ed37b70af445bd98f5f3012b1a6
+      internalID: 23607510
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: jm_2
+      name: 7_2
       rect:
         serializedVersion: 2
-        x: 298
+        x: 896
         y: 0
-        width: 149
-        height: 255
+        width: 448
+        height: 768
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,8 +169,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6afd582a9ccefa74784d0bba1c56f734
-      internalID: -1105587315
+      spriteID: 355d838679978304495f438efeeff9ba
+      internalID: -1360014773
       vertices: []
       indices: 
       edges: []
@@ -166,7 +179,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 11d50a1d87ea37641b73ad85bfa5cfbb
+    spriteID: 6283673049e6cab4aac49f7651f914aa
     internalID: 0
     vertices: []
     indices: 
@@ -176,11 +189,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":149.0,"y":255.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":448.0,"y":768.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      jm_0: 1580118611
-      jm_1: -21694155
-      jm_2: -1105587315
+      7_0: 1935322032
+      7_1: 23607510
+      7_2: -1360014773
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ac084b171caf57d4799a64d5939ca30e
+guid: 8c1de6db834e4ca4ebfd41714bedef73
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 36
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,17 +93,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: leejaemyung_kick_0
+      name: 4_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 448
-        height: 768
+        width: 234
+        height: 949
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,52 +125,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d4af1748815cc164ca9986c0f4175606
-      internalID: 1622416274
+      spriteID: 9ceed0aad2205dd4494d2fca9b57ed2b
+      internalID: -1785085051
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: leejaemyung_kick_1
+      name: 4_1
       rect:
         serializedVersion: 2
-        x: 448
+        x: 234
         y: 0
-        width: 448
-        height: 768
-      alignment: 6
-      pivot: {x: 0, y: 0}
+        width: 234
+        height: 949
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e93733a752438345922a4b7142112b3
-      internalID: -1192880774
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: leejaemyung_kick_2
-      rect:
-        serializedVersion: 2
-        x: 896
-        y: 0
-        width: 448
-        height: 768
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 917dd7550f3a36b44abda54c916d0979
-      internalID: 1184830472
+      spriteID: 758163ca0372345458c94f7b626f7a3f
+      internalID: -333469068
       vertices: []
       indices: 
       edges: []
@@ -166,7 +157,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b2b9591b1c26b1c43900966ff5b766af
+    spriteID: fe2ff8f9d342ff2499d7550daf304070
     internalID: 0
     vertices: []
     indices: 
@@ -176,11 +167,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":448.0,"y":768.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":6,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":1.0},"gridSpriteSize":{"x":234.0,"y":949.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      leejaemyung_kick_0: 1622416274
-      leejaemyung_kick_1: -1192880774
-      leejaemyung_kick_2: 1184830472
+      4_0: -1785085051
+      4_1: -333469068
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
