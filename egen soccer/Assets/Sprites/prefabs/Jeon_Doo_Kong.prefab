@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 4860606337346264698}
   m_Layer: 0
   m_Name: Jeon_Doo_Kong
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -266,6 +266,8 @@ MonoBehaviour:
   anim: {fileID: 4664084163406534237}
   activeTime: 0.15
   startDelay: 0.3
+  maxHitCount: 4
+  stunDuration: 3
 --- !u!95 &4664084163406534237
 Animator:
   serializedVersion: 7

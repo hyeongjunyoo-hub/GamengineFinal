@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 2003348556929600642}
   m_Layer: 0
   m_Name: Lee_Jae_Myong
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -325,3 +325,5 @@ MonoBehaviour:
   anim: {fileID: 5496491243318125044}
   activeTime: 0.15
   startDelay: 0.3
+  maxHitCount: 4
+  stunDuration: 3

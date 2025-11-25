@@ -763,9 +763,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectManager
   characterSprites:
-  - {fileID: 1665486677, guid: 8c1de6db834e4ca4ebfd41714bedef73, type: 3}
-  - {fileID: -595143908, guid: 8fe47e160a2f97047bbed7e0898cfbc2, type: 3}
   - {fileID: 1082543860, guid: be5183d5b572999428a0d0933da5c52e, type: 3}
+  - {fileID: -595143908, guid: 8fe47e160a2f97047bbed7e0898cfbc2, type: 3}
+  - {fileID: 1665486677, guid: 8c1de6db834e4ca4ebfd41714bedef73, type: 3}
   - {fileID: -1429462679, guid: e3160e85b2701c24ba4935dc22d38984, type: 3}
   p1Image: {fileID: 486567019}
   p2Image: {fileID: 1903172436}
