@@ -16,7 +16,7 @@ public class PlayerKick : MonoBehaviour
 
     [Header("이동 설정")]
     public float moveSpeed = 20.0f;
-    public float jumpForce = 15.0f;
+    public float jumpForce = 18.0f;
 
     [Header("점프 판정 설정")]
     public Transform groundCheck;
@@ -30,11 +30,19 @@ public class PlayerKick : MonoBehaviour
     public float activeTime = 0.15f;
     public float startDelay = 0.3f;
 
+    [Header("😵 스턴(기절) 설정")] // [추가됨]
+    public int maxHitCount = 4; // 몇 대 맞으면 기절할지
+    public float stunDuration = 3.0f; // 기절 지속 시간
+    private int currentHitCount = 0; // 현재 맞은 횟수
+    private bool isStunned = false; // 지금 기절 상태인가?
+    private SpriteRenderer spriteRenderer; // 색깔 변화용
+
     private Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         if (kickHitbox != null) kickHitbox.SetActive(false);
 
         // 시작할 때 방향에 맞춰서 캐릭터 뒤집기 (P2는 왼쪽을 봐야 함)
@@ -44,6 +52,13 @@ public class PlayerKick : MonoBehaviour
 
     void Update()
     {
+        if(isStunned)
+        {
+            // 혹시라도 밀리는 힘이 남아있을까봐 확실하게 0으로 고정 (선택 사항)
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); 
+            return;
+        }
+        
         // 1. 땅 감지
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
@@ -93,4 +108,47 @@ public class PlayerKick : MonoBehaviour
         yield return new WaitForSeconds(activeTime);
         if (kickHitbox != null) kickHitbox.SetActive(false);
     }
+
+    // [추가됨] 외부(히트박스)에서 이 함수를 호출해서 때립니다.
+    public void TakeHit()
+    {
+        if (isStunned) return; // 이미 기절했으면 더 안 맞음
+
+        currentHitCount++;
+        Debug.Log($"으악! 맞았다! ({currentHitCount}/{maxHitCount})");
+
+        // 시각적 효과 (잠깐 빨개짐)
+        StartCoroutine(HitColorEffect());
+
+        // 4대 맞았으면 기절!
+        if (currentHitCount >= maxHitCount)
+        {
+            StartCoroutine(StunRoutine());
+        }
+    }
+    // [추가됨] 기절 처리 코루틴
+    IEnumerator StunRoutine()
+    {
+        isStunned = true;
+        currentHitCount = 0; // 카운트 초기화
+        Debug.Log("😵 기절 상태! 3초간 움직일 수 없습니다.");
+        // 움직임 멈춤
+        rb.linearVelocity = Vector2.zero;
+        spriteRenderer.color = Color.gray; // 기절하면 회색으로 변함
+
+        yield return new WaitForSeconds(stunDuration);
+
+        isStunned = false;
+        spriteRenderer.color = Color.white; // 원상복구
+        Debug.Log("😀 기절 풀림!");
+    }
+
+    // [추가됨] 맞았을 때 깜빡거리는 효과
+    IEnumerator HitColorEffect()
+    {
+        spriteRenderer.color = new Color(1f, 0.5f, 0.5f); // 연한 빨강
+        yield return new WaitForSeconds(0.1f);
+        if (!isStunned) spriteRenderer.color = Color.white;
+    }
+
 }
