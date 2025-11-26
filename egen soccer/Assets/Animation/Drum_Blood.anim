@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DrumTong_idle
+  m_Name: Drum_Blood
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,7 +21,7 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1012159884, guid: 17ed30e42cfd9c74594aaebab8120e0f, type: 3}
+      value: {fileID: 1670507595, guid: 17ed30e42cfd9c74594aaebab8120e0f, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -44,7 +44,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 1012159884, guid: 17ed30e42cfd9c74594aaebab8120e0f, type: 3}
+    - {fileID: 1670507595, guid: 17ed30e42cfd9c74594aaebab8120e0f, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}

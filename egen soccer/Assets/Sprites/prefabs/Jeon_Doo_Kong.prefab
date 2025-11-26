@@ -269,10 +269,11 @@ MonoBehaviour:
   startDelay: 0.3
   maxHitCount: 4
   stunDuration: 3
-  canUseSkill: 0
+  canUseSkill: 1
   drumPrefab: {fileID: 0}
   maxSkillCount: 5
   skillKey: 114
+  skillCooldown: 10
 --- !u!95 &4664084163406534237
 Animator:
   serializedVersion: 7

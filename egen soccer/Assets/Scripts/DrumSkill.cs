@@ -10,12 +10,14 @@ public class DrumSkill : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D col;
     private SpriteRenderer sr;
+    private Animator anim;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
 
         // 땅에 안 맞고 허공으로 떨어질 경우 대비
         Destroy(gameObject, 5.0f); 
@@ -34,6 +36,11 @@ public class DrumSkill : MonoBehaviour
                 {
                     enemy.ApplyDirectStun(stunTime);
                     StartCoroutine(CrushRoutine(enemy.gameObject));
+
+                    if(anim !=null)
+                    {
+                        anim.SetTrigger("Hit");
+                    }
                 }
             }
         }

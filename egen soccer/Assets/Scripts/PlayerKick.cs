@@ -43,7 +43,9 @@ public class PlayerKick : MonoBehaviour
     public int maxHitCount = 4; // 몇 대 맞으면 기절할지
     public float stunDuration = 3.0f; // 기절 지속 시간
     private int currentHitCount = 0; // 현재 맞은 횟수
-    private bool isStunned = false; // 지금 기절 상태인가?
+    private bool isStunned = false;
+    private bool isBlinded = false;
+    private float blindDuration = 5.0f;
     private SpriteRenderer spriteRenderer; // 색깔 변화용
 
     [Header("🛢️ 스킬 설정 (이재묭 전용)")]
@@ -52,6 +54,11 @@ public class PlayerKick : MonoBehaviour
     public int maxSkillCount = 5; // 최대 사용 횟수
     public KeyCode skillKey = KeyCode.R; // 스킬 키 (R)
     private int currentSkillCount = 0; // 현재 사용한 횟수
+                                 
+
+    public float skillCooldown = 10.0f;
+    private float nextSkillTime = 0f;
+    
 
     private Rigidbody2D rb;
 
@@ -70,7 +77,6 @@ public class PlayerKick : MonoBehaviour
     {
         if(isStunned)
         {
-            // 혹시라도 밀리는 힘이 남아있을까봐 확실하게 0으로 고정 (선택 사항)
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); 
             return;
         }
@@ -78,47 +84,65 @@ public class PlayerKick : MonoBehaviour
         // 1. 땅 감지
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
-        // 2. 이동 처리 (입력 키 변수 사용)
+        // [핵심 로직] 실명 상태면 키를 서로 바꿔치기!
+        KeyCode targetRight = isBlinded ? leftKey : rightKey;
+        KeyCode targetLeft  = isBlinded ? rightKey : leftKey;
+        KeyCode targetJump  = isBlinded ? kickKey : jumpKey;
+        KeyCode targetKick  = isBlinded ? jumpKey : kickKey;
+
+        // 2. 이동 처리 (수정됨: rightKey -> targetRight 사용!)
         float moveX = 0f;
 
-        if (Input.GetKey(rightKey)) // 오른쪽 키 누름
+        if (Input.GetKey(targetRight)) // 👈 여기가 바뀌었습니다!
         {
             moveX = 1f;
         }
-        else if (Input.GetKey(leftKey)) // 왼쪽 키 누름
+        else if (Input.GetKey(targetLeft)) // 👈 여기가 바뀌었습니다!
         {
             moveX = -1f;
         }
 
         // 플레이어 2(왼쪽 보는 애)는 좌우 키 입력에 따라 이동 방향이 반대가 되지 않도록
-        // moveX 값 자체는 월드 좌표계 기준(오른쪽+, 왼쪽-)으로 적용합니다.
         rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
         
-        // 3. 점프 처리 (점프 키 변수 사용)
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        // 3. 점프 처리 (수정됨: jumpKey -> targetJump 사용!)
+        if (Input.GetKeyDown(targetJump) && isGrounded) // 👈 여기가 바뀌었습니다!
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
 
-        // 4. 발차기 처리 (킥 키 변수 사용)
-        if (Input.GetKeyDown(kickKey))
+        // 4. 발차기 처리 (수정됨: kickKey -> targetKick 사용!)
+        if (Input.GetKeyDown(targetKick)) // 👈 여기가 바뀌었습니다!
         {
             StartCoroutine(KickProcess());
         }
-        // [추가] 5. 스킬 사용 (R키)
-        if (canUseSkill && Input.GetKeyDown(skillKey) && currentSkillCount < maxSkillCount)
-        {
-            // 조건 3가지가 모두 맞아야 발동!
-            // 1. canUseSkill: 스킬을 쓸 수 있는 캐릭터인가? (이재묭인가?)
-            // 2. Input.GetKeyDown: 지금 스킬 키(R)를 눌렀는가?
-            // 3. 횟수 제한: 아직 5번을 다 안 썼는가?
 
-            if (myType == CharacterType.Lee) // (아까 추가한 안전장치)
+        // 5. 스킬 사용 (R키는 안 바꿈 - 헷갈리니까)
+        if (canUseSkill && Input.GetKeyDown(skillKey))
+        {
+            if(currentSkillCount >= maxSkillCount)
             {
-                UseDrumSkill(); // -> 드럼통 떨구러 가자!
+                Debug.Log("스킬 횟수를 모두 소진했습니다!");
+            }
+            else if(Time.time < nextSkillTime)
+            {
+                float remainingTime = nextSkillTime - Time.time;
+                Debug.Log($"쿨타임 중입니다 남은시간: {remainingTime:F1}초");
+            }
+            else 
+            {
+                if (myType == CharacterType.Lee)
+                {
+                    UseDrumSkill();
+                    nextSkillTime = Time.time + skillCooldown;
+                }
+                else if (myType == CharacterType.Jeon)
+                {
+                    UseJeonSkill();
+                    nextSkillTime = Time.time + skillCooldown;
+                }
             }
         }
-        
     }
 
     private void OnDrawGizmos()
@@ -164,6 +188,11 @@ public class PlayerKick : MonoBehaviour
         // 2. 이미 만들어뒀던 '기절 코루틴(StunRoutine)'을 강제로 실행!
         StartCoroutine(StunRoutine());
     }
+    public void ApplyBlind(float duration)
+    {
+        blindDuration = duration;
+        StartCoroutine(BlindRoutine());
+    }
     
 
     void UseDrumSkill()
@@ -191,7 +220,22 @@ public class PlayerKick : MonoBehaviour
                 break; // 적을 찾았으니 더 찾지 말고 끝냄
             }
         }
-    }   
+    }
+    void UseJeonSkill()
+    {
+        currentSkillCount++;
+        Debug.Log("전두콩 스킬 발동! 상대방 조작 반전!");
+
+        PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
+        foreach (PlayerKick player in allPlayers)
+        {
+            if (player != this) 
+            {
+                player.ApplyBlind(5.0f);
+                break; 
+            }
+        }
+    }
     // [추가됨] 기절 처리 코루틴
     IEnumerator StunRoutine()
     {
@@ -206,7 +250,22 @@ public class PlayerKick : MonoBehaviour
 
         isStunned = false;
         spriteRenderer.color = Color.white; // 원상복구
+        if(isBlinded) spriteRenderer.color = Color.black;
         Debug.Log("😀 기절 풀림!");
+    }
+    IEnumerator BlindRoutine()
+    {
+        isBlinded = true;
+        Debug.Log("😵 앞이 안 보여! (조작 반전됨)");
+        spriteRenderer.color = Color.black; 
+
+        yield return new WaitForSeconds(blindDuration);
+
+        isBlinded = false;
+        Debug.Log("👀 시야 회복!");
+        
+        if (isStunned) spriteRenderer.color = Color.gray;
+        else spriteRenderer.color = Color.white;
     }
 
     // [추가됨] 맞았을 때 깜빡거리는 효과
