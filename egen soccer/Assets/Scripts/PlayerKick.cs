@@ -1,8 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
+public enum CharacterType 
+{ 
+    Jin,    // 진지황
+    Lee,    // 이재묭
+    Jeon,   // 전두콩
+    Won     // 원유대사
+}
 public class PlayerKick : MonoBehaviour
 {
+    [Header("🆔 캐릭터 설정 (중요!)")]
+    public CharacterType myType; // 여기서 내 정체를 설정합니다.
     [Header("🎮 조작키 설정 (Inspector에서 설정하세요)")]
     public KeyCode leftKey = KeyCode.A;
     public KeyCode rightKey = KeyCode.D;
@@ -36,6 +45,13 @@ public class PlayerKick : MonoBehaviour
     private int currentHitCount = 0; // 현재 맞은 횟수
     private bool isStunned = false; // 지금 기절 상태인가?
     private SpriteRenderer spriteRenderer; // 색깔 변화용
+
+    [Header("🛢️ 스킬 설정 (이재묭 전용)")]
+    public bool canUseSkill = false; // 이 캐릭터가 스킬을 쓸 수 있는지 (Inspector에서 체크)
+    public GameObject drumPrefab; // 드럼통 프리팹
+    public int maxSkillCount = 5; // 최대 사용 횟수
+    public KeyCode skillKey = KeyCode.R; // 스킬 키 (R)
+    private int currentSkillCount = 0; // 현재 사용한 횟수
 
     private Rigidbody2D rb;
 
@@ -89,6 +105,20 @@ public class PlayerKick : MonoBehaviour
         {
             StartCoroutine(KickProcess());
         }
+        // [추가] 5. 스킬 사용 (R키)
+        if (canUseSkill && Input.GetKeyDown(skillKey) && currentSkillCount < maxSkillCount)
+        {
+            // 조건 3가지가 모두 맞아야 발동!
+            // 1. canUseSkill: 스킬을 쓸 수 있는 캐릭터인가? (이재묭인가?)
+            // 2. Input.GetKeyDown: 지금 스킬 키(R)를 눌렀는가?
+            // 3. 횟수 제한: 아직 5번을 다 안 썼는가?
+
+            if (myType == CharacterType.Lee) // (아까 추가한 안전장치)
+            {
+                UseDrumSkill(); // -> 드럼통 떨구러 가자!
+            }
+        }
+        
     }
 
     private void OnDrawGizmos()
@@ -126,6 +156,42 @@ public class PlayerKick : MonoBehaviour
             StartCoroutine(StunRoutine());
         }
     }
+    public void ApplyDirectStun(float duration)
+    {
+        // 1. 기절 시간을 받아옴 (예: 4초)
+        stunDuration = duration; 
+        
+        // 2. 이미 만들어뒀던 '기절 코루틴(StunRoutine)'을 강제로 실행!
+        StartCoroutine(StunRoutine());
+    }
+    
+
+    void UseDrumSkill()
+    {
+        currentSkillCount++; // 1. 횟수 차감 (이제 1번 쓴 거임)
+        Debug.Log($"스킬 사용! 남은 횟수: {maxSkillCount - currentSkillCount}");
+
+        // 2. "이 게임에 있는 모든 플레이어 다 나와봐!"
+        PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
+
+        // 3. "그중에서 나 말고 다른 놈(적)을 찾아!"
+        foreach (PlayerKick player in allPlayers)
+        {
+            if (player != this) // 'this'는 나 자신(이재묭)
+            {
+                // 4. 적을 찾았다! 적의 머리 위(Y + 6.0f) 좌표 계산
+                Vector3 spawnPos = new Vector3(player.transform.position.x, 6.0f, 0);
+                
+                // 5. 드럼통 소환 (Instantiate)
+                GameObject drum = Instantiate(drumPrefab, spawnPos, Quaternion.identity);
+                
+                // 6. [중요] 드럼통아, 주인님은 나(this)야. 나한테는 터지지 마.
+                drum.GetComponent<DrumSkill>().caster = this.gameObject;
+                
+                break; // 적을 찾았으니 더 찾지 말고 끝냄
+            }
+        }
+    }   
     // [추가됨] 기절 처리 코루틴
     IEnumerator StunRoutine()
     {

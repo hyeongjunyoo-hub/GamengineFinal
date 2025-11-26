@@ -194,6 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8029a997c6d82ab4287f8810a5edc898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerKick
+  myType: 3
   leftKey: 97
   rightKey: 100
   jumpKey: 119
@@ -212,6 +213,10 @@ MonoBehaviour:
   startDelay: 0.3
   maxHitCount: 4
   stunDuration: 3
+  canUseSkill: 0
+  drumPrefab: {fileID: 0}
+  maxSkillCount: 5
+  skillKey: 114
 --- !u!1 &1440923618457764115
 GameObject:
   m_ObjectHideFlags: 0
