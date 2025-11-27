@@ -81,7 +81,7 @@ public class DrumSkill : MonoBehaviour
 
         // 6. 위치 조정 (발 밑으로 깔리게)
         // 캐릭터가 납작해졌으므로 Y위치를 잘 맞춰야 함
-        transform.localPosition = new Vector3(0, 1.0f, 0); 
+        transform.localPosition = new Vector3(0, -4.5f, 0); 
 
         // 7. 드럼통이 캐릭터를 가리도록 순서 변경
         SpriteRenderer targetSr = target.GetComponent<SpriteRenderer>();

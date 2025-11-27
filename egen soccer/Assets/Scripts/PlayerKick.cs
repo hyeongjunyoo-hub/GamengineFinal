@@ -54,6 +54,9 @@ public class PlayerKick : MonoBehaviour
     public int maxSkillCount = 5; // 최대 사용 횟수
     public KeyCode skillKey = KeyCode.R; // 스킬 키 (R)
     private int currentSkillCount = 0; // 현재 사용한 횟수
+    [Header("🏰 스킬 설정 (진지황 전용)")]
+    public GameObject wallPrefab; // 성벽 프리팹
+    public float wallSpawnX = 8.0f; // 골대 앞 X좌표 거리 (절대값)
                                  
 
     public float skillCooldown = 10.0f;
@@ -139,6 +142,11 @@ public class PlayerKick : MonoBehaviour
                 else if (myType == CharacterType.Jeon)
                 {
                     UseJeonSkill();
+                    nextSkillTime = Time.time + skillCooldown;
+                }
+                else if (myType == CharacterType.Jin) // [추가] 진지황 스킬
+                {
+                    UseJinSkill(); 
                     nextSkillTime = Time.time + skillCooldown;
                 }
             }
@@ -235,6 +243,41 @@ public class PlayerKick : MonoBehaviour
                 break; 
             }
         }
+    }
+    // [진지황] 만리장성 소환 (위치 고정 & 반전)
+    void UseJinSkill()
+    {
+        currentSkillCount++;
+        Debug.Log("진지황 스킬 발동! 만리장성!");
+
+        // 1. 소환 위치 설정 (골대 앞 고정 위치)
+        // 왼쪽 골대 앞: (-32.5, -13.6) / 오른쪽 골대 앞: (33.2, -13.6)
+        // 맵 크기에 따라 X값(32.5)은 조금 조절이 필요할 수 있습니다.
+        float spawnX = 32.5f; 
+        float spawnY = -16.0f; // 땅 밑에서 올라와야 하니 시작점은 낮게 잡습니다.
+
+        Vector3 spawnPos;
+        Vector3 spawnScale = new Vector3(1,1,1);
+
+        // P1(왼쪽 팀) -> 왼쪽 골대 앞 (-X)
+        if (facingDirection == 1f) 
+        {
+            spawnPos = new Vector3(-spawnX, spawnY, 0);
+            // 회전 없음 (그대로)
+        }
+        // P2(오른쪽 팀) -> 오른쪽 골대 앞 (+X)
+        else 
+        {
+            spawnPos = new Vector3(spawnX, spawnY, 0);
+            // 좌우 반전 (Y축으로 180도 회전)
+            spawnScale = new Vector3(-1, 1, 1);
+        }
+        // 1. 회전 없이 생성 (Quaternion.identity)
+        GameObject wall = Instantiate(wallPrefab, spawnPos, Quaternion.identity);
+        
+        // 2. 크기를 조절해서 반전시킴 (이렇게 해야 안 잘림!)
+        wall.transform.localScale = spawnScale;
+       
     }
     // [추가됨] 기절 처리 코루틴
     IEnumerator StunRoutine()

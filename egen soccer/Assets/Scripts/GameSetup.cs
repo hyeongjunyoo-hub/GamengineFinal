@@ -28,6 +28,7 @@ public class GameSetup : MonoBehaviour
     {
         PlayerKick script = player.GetComponent<PlayerKick>();
         
+        if (script ==null) return;
         if (playerNum == 1)
         {
             // P1 설정 (WASD, 오른쪽 보기)
@@ -36,6 +37,7 @@ public class GameSetup : MonoBehaviour
             script.rightKey = KeyCode.D;
             script.jumpKey = KeyCode.W;
             script.kickKey = KeyCode.S;
+            script.skillKey = KeyCode.R;
         }
         else
         {
@@ -50,6 +52,7 @@ public class GameSetup : MonoBehaviour
             script.rightKey = KeyCode.RightArrow;
             script.jumpKey = KeyCode.UpArrow;
             script.kickKey = KeyCode.DownArrow;
+            script.skillKey = KeyCode.RightShift;
         }
     }
 }

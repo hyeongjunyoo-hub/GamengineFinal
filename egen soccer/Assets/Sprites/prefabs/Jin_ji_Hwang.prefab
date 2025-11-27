@@ -58,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 8329912667517765866}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.97, y: 6.45, z: 0}
+  m_LocalPosition: {x: 2.97, y: 5.73, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -309,6 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8029a997c6d82ab4287f8810a5edc898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerKick
+  myType: 0
   leftKey: 97
   rightKey: 100
   jumpKey: 119
@@ -327,3 +328,10 @@ MonoBehaviour:
   startDelay: 0.3
   maxHitCount: 4
   stunDuration: 3
+  canUseSkill: 1
+  drumPrefab: {fileID: 0}
+  maxSkillCount: 5
+  skillKey: 114
+  wallPrefab: {fileID: 2776891282162263399, guid: ab519657e2f2db94a98d280d3f712521, type: 3}
+  wallSpawnX: 8
+  skillCooldown: 10
