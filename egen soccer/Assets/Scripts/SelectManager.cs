@@ -1,19 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic; // 리스트 사용을 위해 필수
-using TMPro; // TextMeshPro 사용 시 필수
+using System.Collections.Generic; 
+using TMPro; // TextMeshPro
 
 public class SelectManager : MonoBehaviour
 {
-    [Header("캐릭터 이미지들 (4개 순서대로 넣으세요)")]
-    public List<Sprite> characterSprites; 
+    [Header("캐릭터 데이터 (순서 맞춰서 넣으세요!)")]
+    public List<Sprite> characterSprites; // 이미지들
+    public List<string> characterNames;   // [추가] 이름들 (예: 진지황, 이재묭...)
 
     [Header("UI 연결")]
     public Image p1Image;
     public Image p2Image;
-    public GameObject p1ReadyText; // P1 READY 글자
-    public GameObject p2ReadyText; // P2 READY 글자
+    public TextMeshProUGUI p1NameText; // [추가] P1 이름 표시할 텍스트
+    public TextMeshProUGUI p2NameText; // [추가] P2 이름 표시할 텍스트
+    public GameObject p1ReadyText; 
+    public GameObject p2ReadyText; 
 
     // 내부 변수
     private int p1Idx = 0;
@@ -23,7 +26,6 @@ public class SelectManager : MonoBehaviour
 
     void Start()
     {
-        // 시작 시 첫 번째 캐릭터 보여주기
         UpdateUI();
         p1ReadyText.SetActive(false);
         p2ReadyText.SetActive(false);
@@ -32,15 +34,15 @@ public class SelectManager : MonoBehaviour
     void Update()
     {
         // === Player 1 (WASD) ===
-        if (!isP1Ready) // 준비 안 된 상태에서만 변경 가능
+        if (!isP1Ready)
         {
             if (Input.GetKeyDown(KeyCode.A)) { ChangeCharacter(1, -1); }
             if (Input.GetKeyDown(KeyCode.D)) { ChangeCharacter(1, 1); }
-            if (Input.GetKeyDown(KeyCode.S)) { SetReady(1, true); } // S키로 선택 완료
+            if (Input.GetKeyDown(KeyCode.S)) { SetReady(1, true); }
         }
-        else // 준비 상태에서 취소하려면
+        else
         {
-            if (Input.GetKeyDown(KeyCode.W)) { SetReady(1, false); } // W키로 취소
+            if (Input.GetKeyDown(KeyCode.W)) { SetReady(1, false); }
         }
 
         // === Player 2 (방향키) ===
@@ -48,28 +50,24 @@ public class SelectManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow)) { ChangeCharacter(2, -1); }
             if (Input.GetKeyDown(KeyCode.RightArrow)) { ChangeCharacter(2, 1); }
-            if (Input.GetKeyDown(KeyCode.DownArrow)) { SetReady(2, true); } // 아래키로 선택 완료
+            if (Input.GetKeyDown(KeyCode.DownArrow)) { SetReady(2, true); }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) { SetReady(2, false); } // 위키로 취소
+            if (Input.GetKeyDown(KeyCode.UpArrow)) { SetReady(2, false); }
         }
 
-        // === 게임 시작 체크 ===
-        // 둘 다 준비 완료되면 게임 씬으로 이동
         if (isP1Ready && isP2Ready)
         {
             StartGame();
         }
     }
 
-    // 캐릭터 변경 함수 (playerNum: 1 or 2, direction: -1(이전) or 1(다음))
     void ChangeCharacter(int playerNum, int direction)
     {
         if (playerNum == 1)
         {
             p1Idx += direction;
-            // 인덱스가 0보다 작아지면 마지막으로, 리스트 길이보다 커지면 0으로 (무한 롤링)
             if (p1Idx < 0) p1Idx = characterSprites.Count - 1;
             if (p1Idx >= characterSprites.Count) p1Idx = 0;
         }
@@ -87,8 +85,7 @@ public class SelectManager : MonoBehaviour
         if (playerNum == 1)
         {
             isP1Ready = ready;
-            p1ReadyText.SetActive(ready); // READY 글자 켜기/끄기
-            // 선택 완료 시 약간 어둡게 처리 (시각적 효과)
+            p1ReadyText.SetActive(ready);
             p1Image.color = ready ? Color.gray : Color.white; 
         }
         else
@@ -99,19 +96,26 @@ public class SelectManager : MonoBehaviour
         }
     }
 
+    // [수정됨] 이미지뿐만 아니라 이름도 같이 바꿈
     void UpdateUI()
     {
+        // 1. 이미지 변경
         p1Image.sprite = characterSprites[p1Idx];
         p2Image.sprite = characterSprites[p2Idx];
+
+        // 2. [추가] 이름 텍스트 변경
+        // (리스트에 이름이 들어있을 때만 실행)
+        if (characterNames.Count > 0)
+        {
+            p1NameText.text = characterNames[p1Idx];
+            p2NameText.text = characterNames[p2Idx];
+        }
     }
 
     void StartGame()
     {
-        // 선택한 정보 저장
         GameData.p1CharacterIdx = p1Idx;
         GameData.p2CharacterIdx = p2Idx;
-
-        // 게임 씬으로 이동 (씬 이름 확인!)
         SceneManager.LoadScene("PlayScene"); 
     }
 }

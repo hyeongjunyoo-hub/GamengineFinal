@@ -1,37 +1,51 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; // 이미지 제어용
-using TMPro; // 텍스트메쉬프로(타이머)용
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
     [Header("시간 설정 (초 단위)")]
-    public float regularTime = 120f; // 정규 2분
-    public float overtime = 30f;     // 추가 30초
+    public float regularTime = 120f; 
+    public float overtime = 30f;     
 
     [Header("UI 연결")]
-    public TextMeshProUGUI timerText; // 타이머 텍스트
-    public GameObject pausePanel;     // 일시정지 패널
-    public Image soundButtonImage;    // 소리 버튼 (색깔 바꿀 대상)
+    public TextMeshProUGUI timerText; 
+    public GameObject pausePanel;     
+    public Image soundButtonImage;    
+    public TextMeshProUGUI p1ScoreText; 
+    public TextMeshProUGUI p2ScoreText; 
 
-    [Header("게임 상태 (수정 X)")]
+    [Header("사운드 아이콘 설정")]
+    public Sprite soundOnSprite;
+    public Sprite soundOffSprite;
+
+    [Header("게임 오브젝트 & 위치")]
+    public GameObject ball; 
+    public Transform p1SpawnPoint; 
+    public Transform p2SpawnPoint; 
+
+    [Header("골 센서 연결 (중복골 방지용)")]
+    public Collider2D goalSensorL; // 왼쪽 센서
+    public Collider2D goalSensorR; // 오른쪽 센서
+
+    [Header("게임 상태")]
     public int p1Score = 0;
     public int p2Score = 0;
     public GamePhase currentPhase = GamePhase.Regular;
 
-    // 내부 변수
     private float currentTime;
     private bool isPaused = false;
     private bool isMuted = false;
+    private bool isGoalCeremony = false; 
+    private Color defaultColor; 
 
     public enum GamePhase
     {
-        Regular,    // 정규
-        Overtime,   // 연장
-        GoldenGoal, // 골든골
-        GameOver    // 종료
+        Regular, Overtime, GoldenGoal, GameOver
     }
 
     void Awake()
@@ -44,27 +58,30 @@ public class GameManager : MonoBehaviour
         currentPhase = GamePhase.Regular;
         currentTime = regularTime;
 
-        // 시작 시 패널 끄고, 시간 정상화, 소리 켜기
+        if (timerText != null) defaultColor = timerText.color;
+
         pausePanel.SetActive(false);
         Time.timeScale = 1f;
         
-        // 소리 초기화 (켜진 상태)
         isMuted = false;
         AudioListener.volume = 1f;
-        soundButtonImage.color = Color.white;
+        
+        if (soundButtonImage != null && soundOnSprite != null)
+        {
+            soundButtonImage.sprite = soundOnSprite;
+        }
 
         UpdateTimerUI();
+        UpdateScoreUI(); 
     }
 
     void Update()
     {
-        // 게임 오버가 아니고 일시정지가 아닐 때만 시간 흐름
-        if (currentPhase != GamePhase.GameOver && !isPaused)
+        if (currentPhase != GamePhase.GameOver && !isPaused && !isGoalCeremony)
         {
             HandleTimer();
         }
 
-        // ESC 키 기능
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused) OnResumeClick();
@@ -72,7 +89,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === 1. 시간 및 규칙 로직 ===
     void HandleTimer()
     {
         if (currentPhase == GamePhase.GoldenGoal)
@@ -81,9 +97,7 @@ public class GameManager : MonoBehaviour
             timerText.color = Color.yellow;
             return;
         }
-
         currentTime -= Time.deltaTime;
-
         if (currentTime <= 0)
         {
             currentTime = 0;
@@ -96,92 +110,145 @@ public class GameManager : MonoBehaviour
     {
         if (currentPhase == GamePhase.Regular)
         {
-            if (p1Score == p2Score) // 비김 -> 연장전
+            if (p1Score == p2Score) 
             {
                 currentPhase = GamePhase.Overtime;
                 currentTime = overtime;
             }
-            else EndGame(); // 승부 남 -> 종료
+            else EndGame(); 
         }
         else if (currentPhase == GamePhase.Overtime)
         {
-            if (p1Score == p2Score) // 또 비김 -> 골든골
-            {
-                currentPhase = GamePhase.GoldenGoal;
-            }
-            else EndGame(); // 승부 남 -> 종료
+            if (p1Score == p2Score) currentPhase = GamePhase.GoldenGoal;
+            else EndGame(); 
         }
     }
 
     void UpdateTimerUI()
     {
         if (currentPhase == GamePhase.GoldenGoal) return;
-
         int minutes = Mathf.FloorToInt(currentTime / 60F);
         int seconds = Mathf.FloorToInt(currentTime % 60F);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        if (currentPhase == GamePhase.Overtime) timerText.color = Color.red;
-        else timerText.color = Color.white;
+        if (currentPhase == GamePhase.Overtime || (currentPhase == GamePhase.Regular && currentTime <= 10.0f)) 
+            timerText.color = Color.red;
+        else 
+            timerText.color = defaultColor; 
     }
 
     public void AddScore(int playerNum)
     {
         if (currentPhase == GamePhase.GameOver) return;
+        if (playerNum == 1) p1Score++; else p2Score++;
+        UpdateScoreUI();
+        if (currentPhase == GamePhase.GoldenGoal) EndGame();
+        else StartCoroutine(ResetRound());
+    }
 
-        if (playerNum == 1) p1Score++;
-        else p2Score++;
+    void UpdateScoreUI()
+    {
+        p1ScoreText.text = p1Score.ToString();
+        p2ScoreText.text = p2Score.ToString();
+    }
 
-        if (currentPhase == GamePhase.GoldenGoal) EndGame(); // 골든골이면 바로 종료
+    IEnumerator ResetRound()
+    {
+        isGoalCeremony = true; 
+        Debug.Log("골인! 세레머니...");
+        
+        // 2초간 대기 (세레머니 시간)
+        yield return new WaitForSeconds(2.0f); 
+
+        // 공 리셋
+        Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>();
+        ball.transform.position = new Vector3(0, 2, 0); 
+        ballRb.linearVelocity = Vector2.zero;
+        ballRb.angularVelocity = 0f;
+
+        // 플레이어 리셋 (상태이상 해제 포함)
+        ResetPlayers();
+        
+        // [🔥 추가됨] 맵에 남아있는 모든 성벽(WallSkill) 찾아서 철거!
+        WallSkill[] walls = FindObjectsOfType<WallSkill>();
+        foreach (WallSkill wall in walls)
+        {
+            Destroy(wall.gameObject);
+        }
+
+        // 골 센서 다시 켜기
+        if(goalSensorL != null) goalSensorL.enabled = true;
+        if(goalSensorR != null) goalSensorR.enabled = true;
+
+        isGoalCeremony = false; 
+        Debug.Log("경기 재개!");
+    }
+
+    void ResetPlayers()
+    {
+        GameObject p1 = GameObject.Find("Player1");
+        GameObject p2 = GameObject.Find("Player2");
+
+        if (p1 != null)
+        {
+            p1.transform.position = p1SpawnPoint.position;
+            p1.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+            
+            // 상태 이상 초기화
+            p1.GetComponent<PlayerKick>().ResetStatus();
+        }
+
+        if (p2 != null)
+        {
+            p2.transform.position = p2SpawnPoint.position;
+            p2.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+
+            // 상태 이상 초기화
+            p2.GetComponent<PlayerKick>().ResetStatus();
+        }
     }
 
     void EndGame()
     {
         currentPhase = GamePhase.GameOver;
-        Debug.Log("게임 종료!");
-        // 여기에 나중에 결과창 띄우는 코드 추가
+        timerText.text = "GAME OVER";
+        Debug.Log($"게임 종료! 승자: {(p1Score > p2Score ? "P1" : "P2")}");
     }
 
-
-    // === 2. UI 버튼 기능 (질문하신 내용 포함) ===
-
-    // 일시정지 버튼
     public void OnPauseClick()
     {
         isPaused = true;
         pausePanel.SetActive(true);
-        Time.timeScale = 0f; // 시간 정지
+        Time.timeScale = 0f;
     }
 
-    // Resume(계속하기) 버튼
     public void OnResumeClick()
     {
         isPaused = false;
         pausePanel.SetActive(false);
-        Time.timeScale = 1f; // 시간 재개
+        Time.timeScale = 1f;
     }
 
-    // Sound(소리) 버튼 (질문하신 코드 그대로 적용!)
     public void OnSoundClick()
     {
-        isMuted = !isMuted; // 상태 반전
-
+        isMuted = !isMuted;
         if (isMuted)
         {
-            AudioListener.volume = 0f; // 소리 끄기
-            soundButtonImage.color = Color.gray; // 버튼 어둡게
+            AudioListener.volume = 0f;
+            if (soundButtonImage != null && soundOffSprite != null)
+                soundButtonImage.sprite = soundOffSprite;
         }
         else
         {
-            AudioListener.volume = 1f; // 소리 켜기
-            soundButtonImage.color = Color.white; // 버튼 밝게
+            AudioListener.volume = 1f;
+            if (soundButtonImage != null && soundOnSprite != null)
+                soundButtonImage.sprite = soundOnSprite;
         }
     }
 
-    // Quit(나가기) 버튼
     public void OnQuitClick()
     {
-        Time.timeScale = 1f; // (중요) 시간 다시 돌려놓기
-        SceneManager.LoadScene("StartScene"); // 메뉴 씬 이름 확인하세요!
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MenuScene"); 
     }
 }

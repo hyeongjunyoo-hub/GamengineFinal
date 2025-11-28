@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 005818c5443d7a842b5035957815c894
+guid: 5b137e963c7238d4ea6ccc8ce11b9786
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 50
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -97,23 +97,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Won_Start_0
+      name: Jeon_Doo_Hwan1_0
       rect:
         serializedVersion: 2
-        x: 452
-        y: 56
-        width: 443
-        height: 654
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        x: 51
+        y: 156
+        width: 213
+        height: 471
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72b805c1c9f083544b426ab01ed5b629
-      internalID: -862642654
+      spriteID: 0bcbaf3e0d5755d46bba986a6944b8e5
+      internalID: 763473800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jeon_Doo_Hwan1_1
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 156
+        width: 253
+        height: 455
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d72f1a8ee36c524ebc48fe92a7937f6
+      internalID: -1144558124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Jeon_Doo_Hwan1_2
+      rect:
+        serializedVersion: 2
+        x: 613
+        y: 156
+        width: 324
+        height: 494
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2d40602db799244e8e3691968c9b451
+      internalID: 670801966
       vertices: []
       indices: 
       edges: []
@@ -122,7 +166,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 3139696049cf1be4583157e3f78c2766
     internalID: 0
     vertices: []
     indices: 
@@ -132,9 +176,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":1344.0,"y":768.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Won_Start_0: -862642654
+      Jeon_Doo_Hwan1_0: 763473800
+      Jeon_Doo_Hwan1_1: -1144558124
+      Jeon_Doo_Hwan1_2: 670801966
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
