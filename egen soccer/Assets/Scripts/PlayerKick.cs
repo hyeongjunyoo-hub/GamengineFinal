@@ -45,22 +45,25 @@ public class PlayerKick : MonoBehaviour
     private int currentHitCount = 0; // 현재 맞은 횟수
     private bool isStunned = false;
     private bool isBlinded = false;
+    private bool isSlowed = false;
     private float blindDuration = 5.0f;
+    private float slowDuration = 5.0f;
+
+    private float originSpeed;
+    private float originJump;
+
     private SpriteRenderer spriteRenderer; // 색깔 변화용
 
-    [Header("🛢️ 스킬 설정 (이재묭 전용)")]
+    [Header("🛢️ 스킬 설정 ")]
     public bool canUseSkill = false; // 이 캐릭터가 스킬을 쓸 수 있는지 (Inspector에서 체크)
     public GameObject drumPrefab; // 드럼통 프리팹
-    public int maxSkillCount = 5; // 최대 사용 횟수
-    public KeyCode skillKey = KeyCode.R; // 스킬 키 (R)
-    private int currentSkillCount = 0; // 현재 사용한 횟수
-    [Header("🏰 스킬 설정 (진지황 전용)")]
     public GameObject wallPrefab; // 성벽 프리팹
     public float wallSpawnX = 8.0f; // 골대 앞 X좌표 거리 (절대값)
-                                 
-
+    public int maxSkillCount = 5; // 최대 사용 횟수
+    public KeyCode skillKey = KeyCode.R; // 스킬 키 (R)
     public float skillCooldown = 10.0f;
     private float nextSkillTime = 0f;
+    private int currentSkillCount = 0; // 현재 사용한 횟수
     
 
     private Rigidbody2D rb;
@@ -74,6 +77,8 @@ public class PlayerKick : MonoBehaviour
         // 시작할 때 방향에 맞춰서 캐릭터 뒤집기 (P2는 왼쪽을 봐야 함)
         // X축 스케일을 facingDirection에 맞춥니다.
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDirection, transform.localScale.y, transform.localScale.z);
+        originSpeed = moveSpeed;
+        originJump = jumpForce;
     }
 
     void Update()
@@ -137,18 +142,20 @@ public class PlayerKick : MonoBehaviour
                 if (myType == CharacterType.Lee)
                 {
                     UseDrumSkill();
-                    nextSkillTime = Time.time + skillCooldown;
                 }
                 else if (myType == CharacterType.Jeon)
                 {
                     UseJeonSkill();
-                    nextSkillTime = Time.time + skillCooldown;
                 }
                 else if (myType == CharacterType.Jin) // [추가] 진지황 스킬
                 {
                     UseJinSkill(); 
-                    nextSkillTime = Time.time + skillCooldown;
                 }
+                else if (myType == CharacterType.Won)
+                {
+                    UseWonSkill();
+                }
+                nextSkillTime = Time.time + skillCooldown;
             }
         }
     }
@@ -279,6 +286,22 @@ public class PlayerKick : MonoBehaviour
         wall.transform.localScale = spawnScale;
        
     }
+    void UseWonSkill()
+    {
+        currentSkillCount++;
+        Debug.Log("원유대사 스킬: 해골물(둔화)!");
+
+        PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
+        foreach (PlayerKick player in allPlayers)
+        {
+            if (player != this) 
+            {
+                // 적에게 둔화(Slow) 적용 (5초)
+                player.ApplySlow(5.0f);
+                break; 
+            }
+        }
+    }
     // [추가됨] 기절 처리 코루틴
     IEnumerator StunRoutine()
     {
@@ -310,13 +333,48 @@ public class PlayerKick : MonoBehaviour
         if (isStunned) spriteRenderer.color = Color.gray;
         else spriteRenderer.color = Color.white;
     }
-
+    public void ApplySlow(float duration)
+    {
+        slowDuration = duration;
+        StartCoroutine(SlowRoutine());
+    }
     // [추가됨] 맞았을 때 깜빡거리는 효과
+    IEnumerator SlowRoutine()
+    {
+        // 이미 둔화 상태라면 시간만 연장하거나 무시 (여기선 중복 실행 방지)
+        if (isSlowed) yield break;
+
+        isSlowed = true;
+        Debug.Log("느려짐! (해골물 마심)");
+
+        // 1. 능력치 대폭 깎기 (원래 속도의 30% 수준으로)
+        moveSpeed = originSpeed * 0.3f;
+        jumpForce = originJump * 0.5f;
+
+        UpdateColor(); // 파란색으로 변함
+
+        yield return new WaitForSeconds(slowDuration);
+
+        // 2. 능력치 원상복구
+        moveSpeed = originSpeed;
+        jumpForce = originJump;
+
+        isSlowed = false;
+        Debug.Log("속도 회복!");
+        UpdateColor();
+    }
     IEnumerator HitColorEffect()
     {
         spriteRenderer.color = new Color(1f, 0.5f, 0.5f); // 연한 빨강
         yield return new WaitForSeconds(0.1f);
         if (!isStunned) spriteRenderer.color = Color.white;
+    }
+    void UpdateColor()
+    {
+        if (isStunned) spriteRenderer.color = Color.gray;       // 기절: 회색 (1순위)
+        else if (isBlinded) spriteRenderer.color = Color.black; // 실명: 검정 (2순위)
+        else if (isSlowed) spriteRenderer.color = Color.blue;   // 둔화: 파랑 (3순위)
+        else spriteRenderer.color = Color.white;                // 정상: 흰색
     }
 
 }
