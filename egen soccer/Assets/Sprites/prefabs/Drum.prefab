@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6187179840126153673}
   - component: {fileID: 8145556665132772284}
   - component: {fileID: 8959070959375586538}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Drum
   m_TagString: Untagged
   m_Icon: {fileID: 0}
