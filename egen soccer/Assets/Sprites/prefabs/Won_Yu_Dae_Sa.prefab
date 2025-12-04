@@ -201,7 +201,7 @@ MonoBehaviour:
   kickKey: 115
   facingDirection: 1
   moveSpeed: 20
-  jumpForce: 18
+  jumpForce: 25
   groundCheck: {fileID: 7817213480181820155}
   checkRadius: 0.2
   whatIsGround:
