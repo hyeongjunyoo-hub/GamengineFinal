@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     public int p1Score = 0;
     public int p2Score = 0;
     public GamePhase currentPhase = GamePhase.Regular;
+    [Header("골 이펙트")]
+    public GameObject goalEffectObject; // GOAL 글자 오브젝트
 
     private float currentTime;
     private bool isPaused = false;
@@ -157,9 +159,19 @@ public class GameManager : MonoBehaviour
         isGoalCeremony = true; 
         Debug.Log("골인! 세레머니...");
         
+        // [추가] 1. GOAL 이펙트 켜기 (애니메이션 자동 재생됨)
+       // [추가] 1. GOAL 이펙트 켜기 (애니메이션 자동 재생됨)
+        if (goalEffectObject != null)
+        {
+            goalEffectObject.SetActive(true);
+        }
         // 2초간 대기 (세레머니 시간)
-        yield return new WaitForSeconds(2.0f); 
-
+        yield return new WaitForSeconds(2.0f);
+        
+        if (goalEffectObject != null)
+        {
+        goalEffectObject.SetActive(false);
+        }
         // 공 리셋
         Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>();
         ball.transform.position = new Vector3(0, 2, 0); 

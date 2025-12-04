@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Jeon_Doo_Kong
   - Ball
+  - Ground
   layers:
   - Default
   - TransparentFX
