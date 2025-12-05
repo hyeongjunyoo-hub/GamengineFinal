@@ -44,6 +44,11 @@ public class PlayerKick : MonoBehaviour
     public Animator anim;
     public float activeTime = 0.15f;
     public float startDelay = 0.0f; // (수정됨: 0으로 설정 권장)
+    // [추가됨] 킥 사운드 설정
+    [Header("🔊 오디오 설정")]
+    public AudioClip kickSound; // 발차기 소리 파일
+    public AudioClip skillSound;
+    private AudioSource audioSource; // 재생기
 
     [Header("😵 상태이상 설정")]
     public int maxHitCount = 4; 
@@ -79,7 +84,8 @@ public class PlayerKick : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); 
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
         if (kickHitbox != null) kickHitbox.SetActive(false);
 
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * facingDirection, transform.localScale.y, transform.localScale.z);
@@ -130,6 +136,11 @@ public class PlayerKick : MonoBehaviour
             }
             else 
             {
+                // [🔥 핵심 추가] 스킬 발동 소리 재생!
+                if (audioSource != null && skillSound != null)
+                {
+                    audioSource.PlayOneShot(skillSound);
+                }
                 // 이번에 사용할 스킬의 지속시간을 저장할 변수
                 float currentDuration = 0f;
 
@@ -378,6 +389,14 @@ public class PlayerKick : MonoBehaviour
         if (attachedDrum != null)
         {
             Destroy(attachedDrum.gameObject);
+        }
+    }
+    // [추가] 외부(히트박스)에서 킥 소리를 재생하라고 시킬 때 쓰는 함수
+    public void PlayKickSoundEffect()
+    {
+        if (audioSource != null && kickSound != null)
+        {
+            audioSource.PlayOneShot(kickSound);
         }
     }
 }

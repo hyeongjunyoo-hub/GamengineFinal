@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic; 
 using TMPro; // TextMeshPro
 
@@ -16,16 +17,30 @@ public class SelectManager : MonoBehaviour
     public TextMeshProUGUI p1NameText; // [추가] P1 이름 표시할 텍스트
     public TextMeshProUGUI p2NameText; // [추가] P2 이름 표시할 텍스트
     public GameObject p1ReadyText; 
-    public GameObject p2ReadyText; 
+    public GameObject p2ReadyText;
+    // [추가됨] 오디오 설정
+    [Header("오디오 설정")]
+    public AudioClip passSound;   // 캐릭터 넘길 때 소리 (character_pass)
+    public AudioClip selectSound; // 선택 확정 소리 (character_select)
+    private AudioSource audioSource;
 
     // 내부 변수
     private int p1Idx = 0;
     private int p2Idx = 0;
     private bool isP1Ready = false;
     private bool isP2Ready = false;
+    // [추가] 게임 시작 중인지 확인하는 변수 (중복 실행 방지)
+    private bool isStarting = false;
 
     void Start()
     {
+        // [추가] 오디오 소스 컴포넌트 가져오기 (없으면 자동 추가)
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false; // 시작하자마자 소리나지 않게
         UpdateUI();
         p1ReadyText.SetActive(false);
         p2ReadyText.SetActive(false);
@@ -33,6 +48,8 @@ public class SelectManager : MonoBehaviour
 
     void Update()
     {
+        // 게임이 시작 중이면 입력을 받지 않음
+        if (isStarting) return;
         // === Player 1 (WASD) ===
         if (!isP1Ready)
         {
@@ -59,12 +76,17 @@ public class SelectManager : MonoBehaviour
 
         if (isP1Ready && isP2Ready)
         {
-            StartGame();
+            StartCoroutine(StartGameRoutine());
         }
     }
 
     void ChangeCharacter(int playerNum, int direction)
     {
+        // [추가] 캐릭터 넘기는 소리 재생
+        if (audioSource != null && passSound != null)
+        {
+            audioSource.PlayOneShot(passSound);
+        }
         if (playerNum == 1)
         {
             p1Idx += direction;
@@ -82,6 +104,11 @@ public class SelectManager : MonoBehaviour
 
     void SetReady(int playerNum, bool ready)
     {
+        // [추가] 선택 확정(ready가 true)일 때만 선택 소리 재생
+        if (ready && audioSource != null && selectSound != null)
+        {
+            audioSource.PlayOneShot(selectSound);
+        }
         if (playerNum == 1)
         {
             isP1Ready = ready;
@@ -112,10 +139,20 @@ public class SelectManager : MonoBehaviour
         }
     }
 
-    void StartGame()
+    IEnumerator StartGameRoutine()
     {
+        isStarting = true; // 중복 실행 방지
+
+        // 데이터 저장
         GameData.p1CharacterIdx = p1Idx;
         GameData.p2CharacterIdx = p2Idx;
+
+        Debug.Log("캐릭터 선택 완료! 1초 뒤 게임 시작...");
+
+        // [핵심] 1초 동안 대기 (소리가 재생될 시간을 줌)
+        yield return new WaitForSeconds(1.0f);
+
+        // 씬 이동
         SceneManager.LoadScene("PlayScene"); 
     }
 }

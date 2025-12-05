@@ -31,6 +31,12 @@ public class GameManager : MonoBehaviour
     [Header("골 센서 연결 (중복골 방지용)")]
     public Collider2D goalSensorL; // 왼쪽 센서
     public Collider2D goalSensorR; // 오른쪽 센서
+    
+    [Header("오디오 클립 설정")] // [추가됨]
+    public AudioClip kickoffSound; // 킥오프 소리 (호루라기 등)
+    public AudioClip goalNetSound; // [추가] 골 그물 소리 (hit_goal_1)
+    public AudioClip crowdSound;   // [추가] 관중 함성 (crowd_sound)
+    private AudioSource audioSource; // 소리 재생기
 
     [Header("게임 상태")]
     public int p1Score = 0;
@@ -61,6 +67,8 @@ public class GameManager : MonoBehaviour
         currentTime = regularTime;
 
         if (timerText != null) defaultColor = timerText.color;
+        // [추가] 오디오 소스 가져오기
+        audioSource = GetComponent<AudioSource>();
 
         pausePanel.SetActive(false);
         Time.timeScale = 1f;
@@ -74,7 +82,9 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateTimerUI();
-        UpdateScoreUI(); 
+        UpdateScoreUI();
+        // [추가] 게임 시작 시 킥오프 소리 재생!
+        PlayKickoffSound();
     }
 
     void Update()
@@ -91,6 +101,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // [추가] 소리 재생 함수
+    void PlayKickoffSound()
+    {
+        if (audioSource != null && kickoffSound != null)
+        {
+            audioSource.PlayOneShot(kickoffSound);
+        }
+    }
+    // [추가] 골인 사운드 재생 (그물 소리 + 함성)
+    void PlayGoalSound()
+    {
+        if (audioSource == null) return;
+
+        // 1. 그물 소리는 짧고 강하게 한 번 재생 (PlayOneShot)
+        if (goalNetSound != null)
+        {
+            audioSource.PlayOneShot(goalNetSound);
+        }
+       // 2. 관중 함성 소리 재생 (PlayOneShot은 파일 길이만큼 재생되고 알아서 끝납니다)
+        if (crowdSound != null)
+        {
+            audioSource.PlayOneShot(crowdSound);
+        }
+    }
     void HandleTimer()
     {
         if (currentPhase == GamePhase.GoldenGoal)
@@ -144,6 +178,7 @@ public class GameManager : MonoBehaviour
         if (currentPhase == GamePhase.GameOver) return;
         if (playerNum == 1) p1Score++; else p2Score++;
         UpdateScoreUI();
+        PlayGoalSound();
         if (currentPhase == GamePhase.GoldenGoal) EndGame();
         else StartCoroutine(ResetRound());
     }
@@ -194,6 +229,8 @@ public class GameManager : MonoBehaviour
 
         isGoalCeremony = false; 
         Debug.Log("경기 재개!");
+        // [추가] 재시작 시 킥오프 소리 재생!
+        PlayKickoffSound();
     }
 
     void ResetPlayers()
@@ -263,4 +300,5 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("MenuScene"); 
     }
+    
 }

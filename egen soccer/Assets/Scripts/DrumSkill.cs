@@ -5,6 +5,9 @@ public class DrumSkill : MonoBehaviour
 {
     public float stunTime = 4.0f; // 기절 시간
     public GameObject caster; // 스킬 쓴 사람
+    [Header("🔊 오디오 설정")] // [추가됨]
+    public AudioClip hitSound; // 타격음 (drumhit.mp3 연결)
+    private AudioSource audioSource;
 
     private bool isTrapped = false; 
     private Rigidbody2D rb;
@@ -18,6 +21,11 @@ public class DrumSkill : MonoBehaviour
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         // 땅에 안 맞고 허공으로 떨어질 경우 대비
         Destroy(gameObject, 5.0f); 
@@ -34,6 +42,11 @@ public class DrumSkill : MonoBehaviour
                 PlayerKick enemy = other.GetComponent<PlayerKick>();
                 if (enemy != null)
                 {
+                    // [🔥 핵심 추가!] 타격음 재생
+                    if (audioSource != null && hitSound != null)
+                    {
+                        audioSource.PlayOneShot(hitSound);
+                    }
                     enemy.ApplyDirectStun(stunTime);
                     StartCoroutine(CrushRoutine(enemy.gameObject));
 

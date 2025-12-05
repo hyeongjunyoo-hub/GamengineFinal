@@ -35,6 +35,7 @@ public class KickHitboxController : MonoBehaviour
                 Vector2 force = (kickDirection * kickForce) + (Vector2.up * kickUpwardForce);
                 ballRb.AddForce(force, ForceMode2D.Impulse);
                 Debug.Log("공을 찼습니다!");
+                myPlayer.PlayKickSoundEffect();
             }
         }
         // 2. [추가됨] 플레이어(상대방)와 충돌했을 때
