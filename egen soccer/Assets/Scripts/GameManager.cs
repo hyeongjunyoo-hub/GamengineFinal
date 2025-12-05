@@ -3,6 +3,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic; // 리스트 사용을 위해 필수
+
+// 캐릭터별 엔딩 이미지를 담을 '가방' 정의
+[System.Serializable]
+public class CharacterEndingData
+{
+    public string characterName; // 헷갈리지 않게 이름 적는 칸
+    public Sprite winSprite;     // 이겼을 때 그림
+    public Sprite loseSprite;    // 졌을 때 그림
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +29,22 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI p1ScoreText; 
     public TextMeshProUGUI p2ScoreText; 
 
+    [Header("결과 화면 UI 연결")]
+    public GameObject endPanel;       
+    public Image p1PortraitImg;       
+    public Image p1ResultTextImg;     
+    public Image p2PortraitImg;       
+    public Image p2ResultTextImg;     
+    
+    // [🔥 변경됨] 캐릭터별 승리/패배 이미지를 담을 리스트
+    [Header("캐릭터 엔딩 이미지 (순서 중요! 0:진, 1:이, 2:전, 3:원)")]
+    public List<CharacterEndingData> characterEndings; 
+
+    [Header("결과 텍스트 이미지 에셋")]
+    public Sprite winTextSprite;      // WIN 글자 이미지
+    public Sprite loseTextSprite;     // LOSE 글자 이미지
+    public Sprite drawTextSprite;     // Draw 글자 이미지
+
     [Header("사운드 아이콘 설정")]
     public Sprite soundOnSprite;
     public Sprite soundOffSprite;
@@ -28,22 +54,23 @@ public class GameManager : MonoBehaviour
     public Transform p1SpawnPoint; 
     public Transform p2SpawnPoint; 
 
-    [Header("골 센서 연결 (중복골 방지용)")]
-    public Collider2D goalSensorL; // 왼쪽 센서
-    public Collider2D goalSensorR; // 오른쪽 센서
+    [Header("골 센서 연결")]
+    public Collider2D goalSensorL; 
+    public Collider2D goalSensorR; 
     
-    [Header("오디오 클립 설정")] // [추가됨]
-    public AudioClip kickoffSound; // 킥오프 소리 (호루라기 등)
-    public AudioClip goalNetSound; // [추가] 골 그물 소리 (hit_goal_1)
-    public AudioClip crowdSound;   // [추가] 관중 함성 (crowd_sound)
-    private AudioSource audioSource; // 소리 재생기
+    [Header("오디오 클립")] 
+    public AudioClip kickoffSound; 
+    public AudioClip goalNetSound; 
+    public AudioClip crowdSound;   
+    private AudioSource audioSource; 
 
     [Header("게임 상태")]
     public int p1Score = 0;
     public int p2Score = 0;
     public GamePhase currentPhase = GamePhase.Regular;
+    
     [Header("골 이펙트")]
-    public GameObject goalEffectObject; // GOAL 글자 오브젝트
+    public GameObject goalEffectObject; 
 
     private float currentTime;
     private bool isPaused = false;
@@ -67,10 +94,11 @@ public class GameManager : MonoBehaviour
         currentTime = regularTime;
 
         if (timerText != null) defaultColor = timerText.color;
-        // [추가] 오디오 소스 가져오기
         audioSource = GetComponent<AudioSource>();
 
         pausePanel.SetActive(false);
+        if(endPanel != null) endPanel.SetActive(false);
+
         Time.timeScale = 1f;
         
         isMuted = false;
@@ -83,7 +111,6 @@ public class GameManager : MonoBehaviour
 
         UpdateTimerUI();
         UpdateScoreUI();
-        // [추가] 게임 시작 시 킥오프 소리 재생!
         PlayKickoffSound();
     }
 
@@ -101,30 +128,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // [추가] 소리 재생 함수
+    // (사운드 및 타이머 로직 생략 없이 그대로 유지)
     void PlayKickoffSound()
     {
-        if (audioSource != null && kickoffSound != null)
-        {
-            audioSource.PlayOneShot(kickoffSound);
-        }
+        if (audioSource != null && kickoffSound != null) audioSource.PlayOneShot(kickoffSound);
     }
-    // [추가] 골인 사운드 재생 (그물 소리 + 함성)
+
     void PlayGoalSound()
     {
         if (audioSource == null) return;
-
-        // 1. 그물 소리는 짧고 강하게 한 번 재생 (PlayOneShot)
-        if (goalNetSound != null)
-        {
-            audioSource.PlayOneShot(goalNetSound);
-        }
-       // 2. 관중 함성 소리 재생 (PlayOneShot은 파일 길이만큼 재생되고 알아서 끝납니다)
-        if (crowdSound != null)
-        {
-            audioSource.PlayOneShot(crowdSound);
-        }
+        if (goalNetSound != null) audioSource.PlayOneShot(goalNetSound);
+        if (crowdSound != null) audioSource.PlayOneShot(crowdSound);
     }
+
     void HandleTimer()
     {
         if (currentPhase == GamePhase.GoldenGoal)
@@ -192,44 +208,24 @@ public class GameManager : MonoBehaviour
     IEnumerator ResetRound()
     {
         isGoalCeremony = true; 
-        Debug.Log("골인! 세레머니...");
-        
-        // [추가] 1. GOAL 이펙트 켜기 (애니메이션 자동 재생됨)
-       // [추가] 1. GOAL 이펙트 켜기 (애니메이션 자동 재생됨)
-        if (goalEffectObject != null)
-        {
-            goalEffectObject.SetActive(true);
-        }
-        // 2초간 대기 (세레머니 시간)
+        if (goalEffectObject != null) goalEffectObject.SetActive(true);
         yield return new WaitForSeconds(2.0f);
+        if (goalEffectObject != null) goalEffectObject.SetActive(false);
         
-        if (goalEffectObject != null)
-        {
-        goalEffectObject.SetActive(false);
-        }
-        // 공 리셋
         Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>();
         ball.transform.position = new Vector3(0, 2, 0); 
         ballRb.linearVelocity = Vector2.zero;
         ballRb.angularVelocity = 0f;
 
-        // 플레이어 리셋 (상태이상 해제 포함)
         ResetPlayers();
         
-        // [🔥 추가됨] 맵에 남아있는 모든 성벽(WallSkill) 찾아서 철거!
         WallSkill[] walls = FindObjectsOfType<WallSkill>();
-        foreach (WallSkill wall in walls)
-        {
-            Destroy(wall.gameObject);
-        }
+        foreach (WallSkill wall in walls) Destroy(wall.gameObject);
 
-        // 골 센서 다시 켜기
         if(goalSensorL != null) goalSensorL.enabled = true;
         if(goalSensorR != null) goalSensorR.enabled = true;
 
         isGoalCeremony = false; 
-        Debug.Log("경기 재개!");
-        // [추가] 재시작 시 킥오프 소리 재생!
         PlayKickoffSound();
     }
 
@@ -242,8 +238,6 @@ public class GameManager : MonoBehaviour
         {
             p1.transform.position = p1SpawnPoint.position;
             p1.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
-            
-            // 상태 이상 초기화
             p1.GetComponent<PlayerKick>().ResetStatus();
         }
 
@@ -251,19 +245,84 @@ public class GameManager : MonoBehaviour
         {
             p2.transform.position = p2SpawnPoint.position;
             p2.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
-
-            // 상태 이상 초기화
             p2.GetComponent<PlayerKick>().ResetStatus();
         }
     }
 
+    // === [🔥 중요] 승패에 따라 캐릭터 이미지 교체 ===
     void EndGame()
     {
         currentPhase = GamePhase.GameOver;
         timerText.text = "GAME OVER";
-        Debug.Log($"게임 종료! 승자: {(p1Score > p2Score ? "P1" : "P2")}");
+        
+        if (endPanel != null)
+        {
+            endPanel.SetActive(true);
+            
+            // 1. 누가 무슨 캐릭터를 골랐는지 데이터 가져오기
+            int p1Idx = GameData.p1CharacterIdx;
+            int p2Idx = GameData.p2CharacterIdx;
+
+            // 2. 승패 판정 및 이미지 적용
+            if (p1Score > p2Score) // P1 승리
+            {
+                // P1은 이긴 그림, P2는 진 그림
+                if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].winSprite;
+                if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].loseSprite;
+
+                // 텍스트 설정
+                if(p1ResultTextImg != null) p1ResultTextImg.sprite = winTextSprite;
+                if(p2ResultTextImg != null) p2ResultTextImg.sprite = loseTextSprite;
+            }
+            else if (p2Score > p1Score) // P2 승리
+            {
+                // P1은 진 그림, P2는 이긴 그림
+                if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].loseSprite;
+                if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].winSprite;
+
+                // 텍스트 설정
+                if(p1ResultTextImg != null) p1ResultTextImg.sprite = loseTextSprite;
+                if(p2ResultTextImg != null) p2ResultTextImg.sprite = winTextSprite;
+            }
+            else // 무승부 (둘 다 진 그림 혹은 무승부 그림)
+            {
+                if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].loseSprite;
+                if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].loseSprite;
+
+                if(p1ResultTextImg != null) p1ResultTextImg.sprite = drawTextSprite;
+                if(p2ResultTextImg != null) p2ResultTextImg.sprite = drawTextSprite;
+            }
+
+            // 원본 비율로 맞추기 (이미지가 찌그러진다면 주석 해제하세요)
+            // p1PortraitImg.SetNativeSize();
+            // p2PortraitImg.SetNativeSize();
+        }
+
+        Time.timeScale = 0f;
     }
 
+    public void OnRestartClick()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnMenuClick()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MenuScene"); 
+    }
+
+    public void OnQuitClick()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+    
+    // 일시정지 함수들
     public void OnPauseClick()
     {
         isPaused = true;
@@ -281,24 +340,8 @@ public class GameManager : MonoBehaviour
     public void OnSoundClick()
     {
         isMuted = !isMuted;
-        if (isMuted)
-        {
-            AudioListener.volume = 0f;
-            if (soundButtonImage != null && soundOffSprite != null)
-                soundButtonImage.sprite = soundOffSprite;
-        }
-        else
-        {
-            AudioListener.volume = 1f;
-            if (soundButtonImage != null && soundOnSprite != null)
-                soundButtonImage.sprite = soundOnSprite;
-        }
+        AudioListener.volume = isMuted ? 0f : 1f;
+        if (soundButtonImage != null)
+            soundButtonImage.sprite = isMuted ? soundOffSprite : soundOnSprite;
     }
-
-    public void OnQuitClick()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MenuScene"); 
-    }
-    
 }

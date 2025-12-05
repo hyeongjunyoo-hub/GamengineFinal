@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1d36a9d05df485146a14116f2db0ece5
+guid: b10c78f98dd6946c38a4b17b46c8a903
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -100,42 +100,20 @@ TextureImporter:
       name: Won_Lose_0
       rect:
         serializedVersion: 2
-        x: 316
-        y: 97
-        width: 353
-        height: 572
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 0
+        y: 0
+        width: 1024
+        height: 1024
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12ebda300c65e344e8eb4b6277af8312
-      internalID: 1043979436
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Won_Lose_1
-      rect:
-        serializedVersion: 2
-        x: 851
-        y: 96
-        width: 350
-        height: 573
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f6973aacbba11d345989cf283532e073
-      internalID: -125018982
+      spriteID: 092bbaee4428a43a19ecb46c45d9886d
+      internalID: -869123515
       vertices: []
       indices: 
       edges: []
@@ -144,7 +122,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 02b920990c466d042ab176f6f3789e09
+    spriteID: 608d39c32fcac49dc82f83a117a80943
     internalID: 0
     vertices: []
     indices: 
@@ -154,10 +132,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":1024.0,"y":1024.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Won_Lose_0: 1043979436
-      Won_Lose_1: -125018982
+      Won_Lose_0: -869123515
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
