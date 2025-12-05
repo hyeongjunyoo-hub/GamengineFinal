@@ -915,6 +915,8 @@ MonoBehaviour:
   p2NameText: {fileID: 1893708483}
   p1ReadyText: {fileID: 97745574}
   p2ReadyText: {fileID: 203590968}
+  passSound: {fileID: 8300000, guid: d2cff871a12febc4c8a1636ddd05cbcd, type: 3}
+  selectSound: {fileID: 8300000, guid: d6f93a7d36fae7442b9f8d5b25555ca9, type: 3}
 --- !u!4 &892051985
 Transform:
   m_ObjectHideFlags: 0

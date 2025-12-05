@@ -329,6 +329,7 @@ MonoBehaviour:
   startDelay: 0.1
   kickSound: {fileID: 8300000, guid: 2c810f0854d30ee4cad1da872e6020ca, type: 3}
   skillSound: {fileID: 8300000, guid: 03ee2124d36331844acdde12edbf6756, type: 3}
+  hurtSound: {fileID: 8300000, guid: 77690ae6c5ef74941b451074647f6557, type: 3}
   maxHitCount: 4
   stunDuration: 3
   canUseSkill: 1

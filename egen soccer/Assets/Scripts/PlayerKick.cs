@@ -48,6 +48,7 @@ public class PlayerKick : MonoBehaviour
     [Header("🔊 오디오 설정")]
     public AudioClip kickSound; // 발차기 소리 파일
     public AudioClip skillSound;
+    public AudioClip hurtSound;
     private AudioSource audioSource; // 재생기
 
     [Header("😵 상태이상 설정")]
@@ -255,7 +256,12 @@ public class PlayerKick : MonoBehaviour
 
     public void TakeHit()
     {
-        if (isStunned) return; 
+        if (isStunned) return;
+        // [🔥 추가됨] 맞았을 때 '윽!' 소리 재생
+        if (audioSource != null && hurtSound != null)
+        {
+            audioSource.PlayOneShot(hurtSound);
+        }
         currentHitCount++;
         
         if (currentHitCount >= maxHitCount) 
