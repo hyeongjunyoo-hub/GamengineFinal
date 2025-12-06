@@ -5,6 +5,7 @@ using UnityEngine.Video; // 비디오 제어용
 
 public class SceneChanger : MonoBehaviour
 {
+    
     [Header("UI 연결")]
     public Image soundBtnImage;       // 버튼에 있는 Image 컴포넌트
     public Sprite soundOnSprite;      // 🔊 소리 켜진 아이콘 (초록색/기본)

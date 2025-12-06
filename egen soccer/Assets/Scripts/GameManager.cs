@@ -27,7 +27,8 @@ public class GameManager : MonoBehaviour
     public GameObject pausePanel;     
     public Image soundButtonImage;    
     public TextMeshProUGUI p1ScoreText; 
-    public TextMeshProUGUI p2ScoreText; 
+    public TextMeshProUGUI p2ScoreText;
+    
 
     [Header("결과 화면 UI 연결")]
     public GameObject endPanel;       
@@ -56,12 +57,13 @@ public class GameManager : MonoBehaviour
 
     [Header("골 센서 연결")]
     public Collider2D goalSensorL; 
-    public Collider2D goalSensorR; 
+    public Collider2D goalSensorR;
     
     [Header("오디오 클립")] 
     public AudioClip kickoffSound; 
     public AudioClip goalNetSound; 
-    public AudioClip crowdSound;   
+    public AudioClip crowdSound;
+    public AudioClip winSound;   
     private AudioSource audioSource; 
 
     [Header("게임 상태")]
@@ -258,7 +260,11 @@ public class GameManager : MonoBehaviour
         if (endPanel != null)
         {
             endPanel.SetActive(true);
-            
+        // 2. [추가] 승리 효과음 재생! (You Win!)
+        if (audioSource != null && winSound != null)
+        {
+            audioSource.PlayOneShot(winSound);
+        }    
             // 1. 누가 무슨 캐릭터를 골랐는지 데이터 가져오기
             int p1Idx = GameData.p1CharacterIdx;
             int p2Idx = GameData.p2CharacterIdx;

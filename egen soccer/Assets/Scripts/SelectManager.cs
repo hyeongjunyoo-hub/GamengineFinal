@@ -224,6 +224,11 @@ public class SelectManager : MonoBehaviour
         GameData.p2CharacterIdx = p2Idx;
         Debug.Log("캐릭터 선택 완료! 1초 뒤 게임 시작...");
         yield return new WaitForSeconds(1.0f);
+        GameObject bgm = GameObject.Find("BGM_Player");
+        if (bgm != null)
+        {
+            Destroy(bgm); // BGM 삭제 -> 소리 꺼짐
+        }
         SceneManager.LoadScene("PlayScene"); 
     }
 }
