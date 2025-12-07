@@ -5432,7 +5432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 779b3ce02cb1d407bb7e493927bbba72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  regularTime: 10
+  regularTime: 120
   overtime: 30
   timerText: {fileID: 212039406}
   pausePanel: {fileID: 1372443201}

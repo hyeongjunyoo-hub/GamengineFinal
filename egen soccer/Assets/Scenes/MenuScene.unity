@@ -1067,8 +1067,8 @@ MonoBehaviour:
   skillIcons:
   - {fileID: 21300000, guid: 8aadea901745e2248a32479ad2655943, type: 3}
   - {fileID: 1012159884, guid: 17ed30e42cfd9c74594aaebab8120e0f, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 841343606, guid: 34fc0dba5a94643ca922b9c4190f6947, type: 3}
+  - {fileID: -601645743, guid: beff2356310d44eb6a3133a9517058b7, type: 3}
   skillDescriptions:
   - The Wall
   - The Drum
