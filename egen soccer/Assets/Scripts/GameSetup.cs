@@ -38,6 +38,10 @@ public class GameSetup : MonoBehaviour
         
         if (script == null) return;
 
+        // [🔥 추가됨] 플레이어 번호(1 or 2)를 스크립트에 입력해줍니다.
+        // 이걸 해줘야 PlayerKick이 자기가 누구인지 알고 GameManager에게 스킬 횟수를 물어볼 수 있습니다.
+        script.playerNum = playerNum; 
+
         if (playerNum == 1)
         {
             // P1 설정 (WASD, 오른쪽 보기)

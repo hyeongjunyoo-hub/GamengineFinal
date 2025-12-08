@@ -196,6 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerKick
   myType: 3
+  playerNum: 0
   leftKey: 97
   rightKey: 100
   jumpKey: 119
@@ -215,13 +216,13 @@ MonoBehaviour:
   kickSound: {fileID: 8300000, guid: 2c810f0854d30ee4cad1da872e6020ca, type: 3}
   skillSound: {fileID: 8300000, guid: 3ecbf9ee00f01c84486546372e00aa32, type: 3}
   hurtSound: {fileID: 8300000, guid: fcde6b4876742104a9fa8b10700ba03f, type: 3}
+  skillVoiceClip: {fileID: 8300000, guid: de95061f710b64ce994689846824c100, type: 3}
   maxHitCount: 4
   stunDuration: 3
   canUseSkill: 1
   drumPrefab: {fileID: 0}
   wallPrefab: {fileID: 0}
-  wallSpawnX: 8
-  maxSkillCount: 5
+  simpleSkillEffectPrefab: {fileID: 1275483813683093054, guid: 7c18af30f0380454b82fdc514a4b9225, type: 3}
   skillKey: 114
   skillCooldown: 10
 --- !u!82 &7412118379488686089

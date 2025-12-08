@@ -30,11 +30,10 @@ public class SelectManager : MonoBehaviour
     public Image p2SkillImage;            
     public TextMeshProUGUI p2SkillDescText; 
 
-    // [🔥 추가됨] 시스템 버튼 UI (소리/종료)
     [Header("시스템 버튼 설정")]
-    public Image soundBtnImage;       // 소리 버튼의 아이콘(Image)
-    public Sprite soundOnSprite;      // 🔊 켜짐 그림
-    public Sprite soundOffSprite;     // 🔇 꺼짐 그림
+    public Image soundBtnImage;       
+    public Sprite soundOnSprite;      
+    public Sprite soundOffSprite;     
 
     [Header("오디오 설정")]
     public AudioClip passSound;   
@@ -47,7 +46,6 @@ public class SelectManager : MonoBehaviour
     private bool isP1Ready = false;
     private bool isP2Ready = false;
     private bool isStarting = false;
-    private bool isMuted = false; // 소리 상태 변수
 
     void Start()
     {
@@ -58,14 +56,8 @@ public class SelectManager : MonoBehaviour
         }
         audioSource.playOnAwake = false; 
         
-        // [🔥 추가됨] 소리 버튼 초기화
-        isMuted = false;
-        AudioListener.volume = 1f;
-        if (soundBtnImage != null && soundOnSprite != null)
-        {
-            soundBtnImage.sprite = soundOnSprite;
-            soundBtnImage.color = Color.white;
-        }
+        // [🔥 핵심] 시작할 때 저장된 소리 설정 불러오기
+        ApplySoundSetting();
         
         UpdateUI();
         p1ReadyText.SetActive(false);
@@ -106,35 +98,30 @@ public class SelectManager : MonoBehaviour
         }
     }
 
-    // === [🔥 추가됨] 버튼 기능 구현 (StartScene과 동일) ===
+    // === 버튼 기능 ===
 
-    // 1. 소리 껐다 켜기 (이미지 교체 포함)
     public void ToggleSound()
     {
-        isMuted = !isMuted; // 상태 반전
+        GameData.isGlobalMuted = !GameData.isGlobalMuted; // 상태 반전
+        ApplySoundSetting(); // 적용
+    }
 
-        if (isMuted) // 소리 끄기
+    void ApplySoundSetting()
+    {
+        if (GameData.isGlobalMuted)
         {
             AudioListener.volume = 0f; 
-            if (soundBtnImage != null && soundOffSprite != null) 
-            {
-                soundBtnImage.sprite = soundOffSprite; // 빨간 아이콘
-            }
+            if (soundBtnImage != null) soundBtnImage.sprite = soundOffSprite;
         }
-        else // 소리 켜기
+        else
         {
             AudioListener.volume = 1f; 
-            if (soundBtnImage != null && soundOnSprite != null) 
-            {
-                soundBtnImage.sprite = soundOnSprite; // 초록 아이콘
-            }
+            if (soundBtnImage != null) soundBtnImage.sprite = soundOnSprite;
         }
     }
 
-    // 2. 게임 종료 (Quit)
     public void QuitGame()
     {
-        Debug.Log("게임 종료!");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -142,20 +129,12 @@ public class SelectManager : MonoBehaviour
 #endif
     }
     
-    // 3. (선택사항) 다시 타이틀 화면으로 돌아가고 싶다면?
-    public void GoToTitle()
-    {
-        SceneManager.LoadScene("StartScene");
-    }
-
-    // ================================================
+    // === 내부 로직 ===
 
     void ChangeCharacter(int playerNum, int direction)
     {
-        if (audioSource != null && passSound != null)
-        {
-            audioSource.PlayOneShot(passSound);
-        }
+        if (audioSource != null && passSound != null) audioSource.PlayOneShot(passSound);
+        
         if (playerNum == 1)
         {
             p1Idx += direction;
@@ -173,10 +152,8 @@ public class SelectManager : MonoBehaviour
 
     void SetReady(int playerNum, bool ready)
     {
-        if (ready && audioSource != null && selectSound != null)
-        {
-            audioSource.PlayOneShot(selectSound);
-        }
+        if (ready && audioSource != null && selectSound != null) audioSource.PlayOneShot(selectSound);
+
         if (playerNum == 1)
         {
             isP1Ready = ready;
@@ -222,13 +199,14 @@ public class SelectManager : MonoBehaviour
         isStarting = true; 
         GameData.p1CharacterIdx = p1Idx;
         GameData.p2CharacterIdx = p2Idx;
+        
         Debug.Log("캐릭터 선택 완료! 1초 뒤 게임 시작...");
         yield return new WaitForSeconds(1.0f);
+        
+        // [🔥 핵심] 게임 씬 넘어가기 전에 로비 BGM 파괴 -> PlayScene은 조용하게 시작
         GameObject bgm = GameObject.Find("BGM_Player");
-        if (bgm != null)
-        {
-            Destroy(bgm); // BGM 삭제 -> 소리 꺼짐
-        }
+        if (bgm != null) Destroy(bgm); 
+        
         SceneManager.LoadScene("PlayScene"); 
     }
 }
