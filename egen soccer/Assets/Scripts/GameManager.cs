@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("연출 스크립트 연결")] 
+    public PhaseDisplay phaseDisplay;
     [Header("시간 설정")]
     public float regularTime = 120f; 
     public float overtime = 30f;     
@@ -120,6 +122,7 @@ public class GameManager : MonoBehaviour
         UpdateTimerUI();
         UpdateScoreUI();
         PlayKickoffSound();
+        if (phaseDisplay != null) phaseDisplay.ShowKickoff();
     }
 
     void Update()
@@ -158,6 +161,7 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+
 
     void UpdateSkillUI()
     {
@@ -227,12 +231,41 @@ public class GameManager : MonoBehaviour
     void PlayKickoffSound() { if (audioSource != null && kickoffSound != null) audioSource.PlayOneShot(kickoffSound); }
     void PlayGoalSound() { if (audioSource == null) return; if (goalNetSound != null) audioSource.PlayOneShot(goalNetSound); if (crowdSound != null) audioSource.PlayOneShot(crowdSound); }
     void HandleTimer() { if (currentPhase == GamePhase.GoldenGoal) { timerText.text = "GOLDEN GOAL"; timerText.color = Color.yellow; return; } currentTime -= Time.deltaTime; if (currentTime <= 0) { currentTime = 0; CheckPhaseChange(); } UpdateTimerUI(); }
-    void CheckPhaseChange() { if (currentPhase == GamePhase.Regular) { if (p1Score == p2Score) { currentPhase = GamePhase.Overtime; currentTime = overtime; } else EndGame(); } else if (currentPhase == GamePhase.Overtime) { if (p1Score == p2Score) currentPhase = GamePhase.GoldenGoal; else EndGame(); } }
+    void CheckPhaseChange()
+    {
+        if (currentPhase == GamePhase.Regular)
+        {
+            if (p1Score == p2Score)
+            {
+                currentPhase = GamePhase.Overtime;
+                currentTime = overtime;
+                // [🔥 추가 3] 연장전(Injury Time) 문구 띄우기
+                if (phaseDisplay != null) phaseDisplay.ShowInjuryTime();
+            }
+            else
+            {
+                EndGame();
+            }
+        }
+        else if (currentPhase == GamePhase.Overtime)
+        {
+            if (p1Score == p2Score)
+            {
+                currentPhase = GamePhase.GoldenGoal;
+                // [🔥 추가 4] 골든골(Golden Goal) 문구 띄우기
+                if (phaseDisplay != null) phaseDisplay.ShowGoldenGoal();
+            }
+            else
+            {
+                EndGame();
+            }
+        }
+    }
     void UpdateTimerUI() { if (currentPhase == GamePhase.GoldenGoal) return; int minutes = Mathf.FloorToInt(currentTime / 60F); int seconds = Mathf.FloorToInt(currentTime % 60F); timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds); if (currentPhase == GamePhase.Overtime || (currentPhase == GamePhase.Regular && currentTime <= 10.0f)) timerText.color = Color.red; else timerText.color = defaultColor; }
     public void AddScore(int playerNum) { if (currentPhase == GamePhase.GameOver) return; if (playerNum == 1) p1Score++; else p2Score++; UpdateScoreUI(); PlayGoalSound(); if (currentPhase == GamePhase.GoldenGoal) EndGame(); else StartCoroutine(ResetRound()); }
     void UpdateScoreUI() { p1ScoreText.text = p1Score.ToString(); p2ScoreText.text = p2Score.ToString(); }
-    IEnumerator ResetRound() { isGoalCeremony = true; if (goalEffectObject != null) goalEffectObject.SetActive(true); yield return new WaitForSeconds(2.0f); if (goalEffectObject != null) goalEffectObject.SetActive(false); Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>(); ball.transform.position = new Vector3(0, 2, 0); ballRb.linearVelocity = Vector2.zero; ballRb.angularVelocity = 0f; ResetPlayers(); WallSkill[] walls = FindObjectsOfType<WallSkill>(); foreach (WallSkill wall in walls) Destroy(wall.gameObject); if(goalSensorL != null) goalSensorL.enabled = true; if(goalSensorR != null) goalSensorR.enabled = true; isGoalCeremony = false; PlayKickoffSound(); }
-    void ResetPlayers() { GameObject p1 = GameObject.Find("Player1"); GameObject p2 = GameObject.Find("Player2"); if (p1 != null) { p1.transform.position = p1SpawnPoint.position; p1.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero; p1.GetComponent<PlayerKick>().ResetStatus(); } if (p2 != null) { p2.transform.position = p2SpawnPoint.position; p2.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero; p2.GetComponent<PlayerKick>().ResetStatus(); } }
+    IEnumerator ResetRound() { isGoalCeremony = true; if (goalEffectObject != null) goalEffectObject.SetActive(true); yield return new WaitForSeconds(2.0f); if (goalEffectObject != null) goalEffectObject.SetActive(false); Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>(); ball.transform.position = new Vector3(0, 2, 0); ballRb.linearVelocity = Vector2.zero; ballRb.angularVelocity = 0f; ResetPlayers(); WallSkill[] walls = FindObjectsOfType<WallSkill>(); foreach (WallSkill wall in walls) Destroy(wall.gameObject); if(goalSensorL != null) goalSensorL.enabled = true; if(goalSensorR != null) goalSensorR.enabled = true; isGoalCeremony = false; PlayKickoffSound();}
+    void ResetPlayers() { GameObject p1 = GameObject.Find("Player1"); GameObject p2 = GameObject.Find("Player2"); if (p1 != null) { p1.transform.position = p1SpawnPoint.position; p1.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero; p1.GetComponent<PlayerKick>().ResetStatus(); } if (p2 != null) { p2.transform.position = p2SpawnPoint.position; p2.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero; p2.GetComponent<PlayerKick>().ResetStatus();  } }
     void EndGame() { currentPhase = GamePhase.GameOver; timerText.text = "GAME OVER"; if (endPanel != null) { endPanel.SetActive(true); if (audioSource != null && winSound != null) audioSource.PlayOneShot(winSound); int p1Idx = GameData.p1CharacterIdx; int p2Idx = GameData.p2CharacterIdx; if (p1Score > p2Score) { if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].winSprite; if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].loseSprite; if(p1ResultTextImg != null) p1ResultTextImg.sprite = winTextSprite; if(p2ResultTextImg != null) p2ResultTextImg.sprite = loseTextSprite; } else if (p2Score > p1Score) { if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].loseSprite; if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].winSprite; if(p1ResultTextImg != null) p1ResultTextImg.sprite = loseTextSprite; if(p2ResultTextImg != null) p2ResultTextImg.sprite = winTextSprite; } else { if(p1PortraitImg != null) p1PortraitImg.sprite = characterEndings[p1Idx].loseSprite; if(p2PortraitImg != null) p2PortraitImg.sprite = characterEndings[p2Idx].loseSprite; if(p1ResultTextImg != null) p1ResultTextImg.sprite = drawTextSprite; if(p2ResultTextImg != null) p2ResultTextImg.sprite = drawTextSprite; } } Time.timeScale = 0f; }
     public void OnRestartClick() { Time.timeScale = 1f; SceneManager.LoadScene(SceneManager.GetActiveScene().name); }
     public void OnPauseClick() { isPaused = true; pausePanel.SetActive(true); Time.timeScale = 0f; }

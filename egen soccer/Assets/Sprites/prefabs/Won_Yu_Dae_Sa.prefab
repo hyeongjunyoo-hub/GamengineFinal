@@ -222,6 +222,8 @@ MonoBehaviour:
   canUseSkill: 1
   drumPrefab: {fileID: 0}
   wallPrefab: {fileID: 0}
+  jeonSkillEffect: {fileID: 0}
+  wonSkillEffectPrefab: {fileID: 2785798072917755622, guid: b5822b32d6dad9a469d3674321faffc1, type: 3}
   simpleSkillEffectPrefab: {fileID: 1275483813683093054, guid: 7c18af30f0380454b82fdc514a4b9225, type: 3}
   skillKey: 114
   skillCooldown: 10

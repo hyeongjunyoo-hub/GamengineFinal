@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public enum CharacterType 
 { 
@@ -71,12 +72,15 @@ public class PlayerKick : MonoBehaviour
     public bool canUseSkill = false; 
     public GameObject drumPrefab; 
     public GameObject wallPrefab;
+    public GameObject jeonSkillEffect;
+    public GameObject wonSkillEffectPrefab;
     // [🔥 핵심] 단순 이펙트 프리팹 (전두콩, 원유대사)
     public GameObject simpleSkillEffectPrefab; 
     
     public KeyCode skillKey = KeyCode.R; 
     public float skillCooldown = 10.0f;
     private float nextSkillTime = 0f;
+    private int currentSkillCount = 0; // 스킬 사용 횟수 추적 변수
 
     private Rigidbody2D rb;
 
@@ -188,16 +192,62 @@ public class PlayerKick : MonoBehaviour
         }
     }
 
-    void UseJeonSkill()
+    // [PlayerKick.cs] 내부의 UseJeonSkill 함수를 아래 코드로 교체하세요.
+
+void UseJeonSkill()
+{
+    currentSkillCount++;
+    Debug.Log("전두콩 스킬: 실명! 내 앞에 이펙트 소환!");
+
+    // 1. 스킬 이펙트 프리팹이 연결되어 있다면 실행
+    if (jeonSkillEffect != null)
     {
-        Debug.Log("전두콩 스킬: 랜덤 키 변경!");
-        SpawnSimpleEffect(); // 이펙트
-        PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
-        foreach (PlayerKick player in allPlayers)
+        // [위치 계산 핵심 로직]
+        // transform.position: 현재 내 캐릭터가 서 있는 실시간 위치
+        // facingDirection: 내가 바라보는 방향 (1이면 오른쪽, -1이면 왼쪽)
+        // new Vector3(facingDirection * 1.5f, 0.5f, 0): 내 위치 기준 앞쪽으로 1.5만큼, 위로 0.5만큼 이동
+        
+        // 거리(1.5f)와 높이(0.5f)는 게임 화면을 보면서 입맛에 맞게 숫자만 고치면 됩니다.
+        Vector3 spawnOffset = new Vector3(facingDirection * 1.5f, 0.5f, 0); 
+        Vector3 spawnPos = transform.position + spawnOffset;
+        
+        // 계산된 위치(spawnPos)에 이펙트 생성
+        GameObject effect = Instantiate(jeonSkillEffect, spawnPos, Quaternion.identity);
+        
+        // [방향 맞추기 로직]
+        // 원본 스프라이트가 "왼쪽"을 보고 있다고 하셨으므로:
+        Vector3 scale = effect.transform.localScale;
+
+        if (facingDirection == 1f) // Player 1 (오른쪽 보는 중)
         {
-            if (player != this) { player.ApplyBlind(5.0f); break; }
+            // 이펙트도 오른쪽을 보게 하려면 -> 좌우 반전 필요 (X를 음수로)
+            scale.x = -Mathf.Abs(scale.x);
+        }
+        else // Player 2 (왼쪽 보는 중)
+        {
+            // 이펙트도 왼쪽을 보게 하려면 -> 원본 그대로 유지 (X를 양수로)
+            scale.x = Mathf.Abs(scale.x);
+        }
+
+        // 설정한 스케일 적용
+        effect.transform.localScale = scale;
+
+        // 2초 뒤에 이펙트 삭제 (지속 시간 조절 가능)
+        Destroy(effect, 2.0f);
+    }
+
+    // 2. 기존 기능: 상대방 찾아서 실명 상태이상 걸기
+    PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
+    foreach (PlayerKick player in allPlayers)
+    {
+        // 나 자신이 아닌 다른 플레이어에게 효과 적용
+        if (player != this) 
+        { 
+            player.ApplyBlind(5.0f); // 5초간 실명
+            break; 
         }
     }
+}
 
     void UseJinSkill()
     {
@@ -220,12 +270,20 @@ public class PlayerKick : MonoBehaviour
 
     void UseWonSkill()
     {
-        Debug.Log("원유대사 스킬: 해골물!");
-        SpawnSimpleEffect(); // 이펙트
+        Debug.Log("원유대사 스킬: 해골물! (상대 머리 위 부처 소환)");
+        
+        // 내 스킬 사용 횟수 차감 등은 Update에서 이미 처리됨
+        
         PlayerKick[] allPlayers = FindObjectsOfType<PlayerKick>();
         foreach (PlayerKick player in allPlayers)
         {
-            if (player != this) { player.ApplySlow(5.0f); break; }
+            // 내가 아닌 다른 플레이어(상대방)를 찾음
+            if (player != this) 
+            { 
+                // [🔥 핵심 변경] 상대방에게 슬로우를 걸면서 '내 스킬 이펙트(부처)'를 넘겨줌
+                player.ApplySlow(5.0f, wonSkillEffectPrefab); 
+                break; 
+            }
         }
     }
 
@@ -239,6 +297,13 @@ public class PlayerKick : MonoBehaviour
         }
     }
 
+    // 2. 슬로우 적용 함수 (피해자 입장) - 파라미터 추가됨
+    public void ApplySlow(float duration, GameObject effectPrefab = null) 
+    { 
+        slowDuration = duration; 
+        // 코루틴 시작할 때 이펙트 프리팹도 같이 넘김
+        StartCoroutine(SlowRoutine(effectPrefab)); 
+    }
     // --- 피격 및 상태이상 ---
     public void TakeHit()
     {
@@ -251,7 +316,7 @@ public class PlayerKick : MonoBehaviour
 
     public void ApplyDirectStun(float duration) { stunDuration = duration; StartCoroutine(StunRoutine()); }
     public void ApplyBlind(float duration) { blindDuration = duration; StartCoroutine(BlindRoutine()); }
-    public void ApplySlow(float duration) { slowDuration = duration; StartCoroutine(SlowRoutine()); }
+    
 
     IEnumerator StunRoutine()
     {
@@ -269,12 +334,50 @@ public class PlayerKick : MonoBehaviour
         isBlinded = false; ResetControls(); UpdateColor();
     }
 
-    IEnumerator SlowRoutine()
+    // 3. 슬로우 코루틴 (상태이상 지속 시간 담당)
+    IEnumerator SlowRoutine(GameObject effectPrefab)
     {
-        if (isSlowed) yield break;
-        isSlowed = true; moveSpeed = originSpeed * 0.3f; jumpForce = originJump * 0.5f; UpdateColor(); 
+        if (isSlowed) yield break; // 이미 느려진 상태면 중복 적용 X
+
+        isSlowed = true; 
+        moveSpeed = originSpeed * 0.3f; // 속도 감소
+        jumpForce = originJump * 0.5f;  // 점프 감소
+        UpdateColor(); 
+
+        GameObject myBuddha = null; // 소환된 부처님을 담을 변수
+
+        // [🔥 핵심 로직] 이펙트(부처)가 존재하면 내 머리 위에 소환
+        if (effectPrefab != null)
+        {
+            // 1. 내 위치(transform)에 생성
+            myBuddha = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+            
+            // 2. 나(플레이어)를 부모로 설정 -> 내가 움직이면 같이 따라다님
+            myBuddha.transform.SetParent(this.transform);
+
+            // 3. 머리 위로 위치 조정 (Y값 2.5f 정도면 머리 위, 필요시 조절)
+            myBuddha.transform.localPosition = new Vector3(0, 6.0f, 0);
+
+            // 4. [중요] 스케일 보정 (내가 뒤집혀 있어도 부처님은 찌그러지지 않게)
+            // 부모 스케일의 영향을 받지 않도록 1,1,1로 초기화하되, 방향 고려
+            // (부처님 이미지가 좌우 대칭이라면 그냥 1,1,1로 둬도 무방)
+            myBuddha.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
+        }
+
+        // --- 상태이상 지속 시간 대기 ---
         yield return new WaitForSeconds(slowDuration);
-        moveSpeed = originSpeed; jumpForce = originJump; isSlowed = false; UpdateColor();
+
+        // --- 상태이상 종료 ---
+        moveSpeed = originSpeed; 
+        jumpForce = originJump; 
+        isSlowed = false; 
+        UpdateColor();
+
+        // [🔥 종료 처리] 상태이상이 풀렸으니 머리 위 부처님도 삭제
+        if (myBuddha != null)
+        {
+            Destroy(myBuddha);
+        }
     }
 
     IEnumerator HitColorEffect()
