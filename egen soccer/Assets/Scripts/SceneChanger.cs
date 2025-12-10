@@ -17,7 +17,7 @@ public class SceneChanger : MonoBehaviour
 
     void Start()
     {
-        // [🔥 추가됨] 시작할 때 저장된 소리 설정 불러오기
+        // 시작할 때 저장된 소리 설정 불러오기
         ApplySoundSetting();
     }
 

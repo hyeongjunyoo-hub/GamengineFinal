@@ -10,7 +10,7 @@ public class KickHitboxController : MonoBehaviour
 
     void Start()
     {
-        // 내 부모(공격자)가 누구인지 찾아놓습니다.
+        // 내 부모(공격자)가 누구인지 찾기
         myPlayer = GetComponentInParent<PlayerKick>();
 
         if (myPlayer == null)
@@ -38,13 +38,13 @@ public class KickHitboxController : MonoBehaviour
                 myPlayer.PlayKickSoundEffect();
             }
         }
-        // 2. [추가됨] 플레이어(상대방)와 충돌했을 때
+        // 2. 플레이어(상대방)와 충돌했을 때
         else if (other.CompareTag("Player"))
         {
-            // 부딪힌 대상에게서 PlayerKick 스크립트를 가져옵니다.
+            // 부딪힌 대상에게서 PlayerKick 스크립트를 가져옴
             PlayerKick enemy = other.GetComponent<PlayerKick>();
 
-            // 중요! 부딪힌 사람이 '나 자신'이면 무시해야 합니다.
+            // 중요! 부딪힌 사람이 '나 자신'이면 무시
             if (enemy != null && enemy != myPlayer)
             {
                 Debug.Log("상대방을 발로 찼습니다!");

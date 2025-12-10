@@ -205,16 +205,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === [🔥 수정됨] 메뉴로 나가기 ===
+    // === 메뉴로 나가기 ===
     public void OnMenuClick() 
     { 
         Time.timeScale = 1f; 
         
-        // [중요] 나가기 전에 소리를 무조건 다시 켜놓고 나갑니다.
-        // 그래야 MenuScene에 도착했을 때 그쪽 소리 설정이 정상적으로 먹힙니다.
+        // 나가기 전에 소리를 무조건 다시 켜놓기
+        // MenuScene에 도착했을 때 그쪽 소리 설정
         AudioListener.volume = 1f; 
 
-        // [중요] StartScene이 아니라 MenuScene으로 이동
+        // StartScene이 아니라 MenuScene으로 이동
         SceneManager.LoadScene("MenuScene"); 
     }
 
@@ -252,7 +252,7 @@ public class GameManager : MonoBehaviour
             if (p1Score == p2Score)
             {
                 currentPhase = GamePhase.GoldenGoal;
-                // [🔥 추가 4] 골든골(Golden Goal) 문구 띄우기
+                // 골든골(Golden Goal) 문구 띄우기
                 if (phaseDisplay != null) phaseDisplay.ShowGoldenGoal();
             }
             else

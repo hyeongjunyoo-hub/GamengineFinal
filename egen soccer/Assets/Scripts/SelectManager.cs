@@ -203,7 +203,7 @@ public class SelectManager : MonoBehaviour
         Debug.Log("캐릭터 선택 완료! 1초 뒤 게임 시작...");
         yield return new WaitForSeconds(1.0f);
         
-        // [🔥 핵심] 게임 씬 넘어가기 전에 로비 BGM 파괴 -> PlayScene은 조용하게 시작
+        // 게임 씬 넘어가기 전에 로비 BGM 파괴 -> PlayScene은 조용하게 시작
         GameObject bgm = GameObject.Find("BGM_Player");
         if (bgm != null) Destroy(bgm); 
         

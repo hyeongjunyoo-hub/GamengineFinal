@@ -9,8 +9,7 @@ public class GoalCheck : MonoBehaviour
     {
         if (other.CompareTag("Ball"))
         {
-            // [수정됨] BoxCollider2D 대신 모든 콜라이더의 부모인 Collider2D를 끕니다.
-            // (이제 Box든 Capsule이든 Circle이든 상관없이 무조건 꺼집니다!)
+            // BoxCollider2D 대신 모든 콜라이더의 부모인 Collider2D를 off
             GetComponent<Collider2D>().enabled = false;
 
             if (isLeftGoal)

@@ -10,11 +10,11 @@ public class PhaseDisplay : MonoBehaviour
     public GameObject goldenGoalObj;  
 
     [Header("연출 설정")]
-    public float popUpDuration = 0.5f; // 커지는 시간 (조금 더 천천히 하려면 숫자를 키우세요)
+    public float popUpDuration = 0.5f; // 커지는 시간
     public float stayDuration = 1.0f;  // 유지되는 시간
     public float popDownDuration = 0.5f; // 작아지는 시간
 
-    // 최종 크기 조절 변수 (1.0이 너무 크면 0.5 ~ 0.8 정도로 줄이세요)
+    // 최종 크기 조절 변수
     [Range(0.1f, 2.0f)] 
     public float finalSize = 0.6f; 
 
@@ -35,8 +35,7 @@ public class PhaseDisplay : MonoBehaviour
         {
             timer += Time.unscaledDeltaTime;
             float t = timer / popUpDuration;
-            
-            // [팁] SmoothStep을 적용하면 기계적인 움직임이 아니라 더 부드러운 곡선으로 움직입니다.
+        
             t = t * t * (3f - 2f * t); 
             
             float scale = Mathf.Lerp(0f, finalSize, t);

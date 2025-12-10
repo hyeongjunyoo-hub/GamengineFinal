@@ -5969,8 +5969,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   phaseDisplay: {fileID: 1343950532}
-  regularTime: 120
-  overtime: 30
+  regularTime: 15
+  overtime: 15
   maxSkillCount: 5
   p1SkillIcons:
   - {fileID: 1310841446}

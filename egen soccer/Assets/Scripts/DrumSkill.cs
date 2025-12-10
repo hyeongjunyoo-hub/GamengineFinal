@@ -5,7 +5,7 @@ public class DrumSkill : MonoBehaviour
 {
     public float stunTime = 4.0f; // 기절 시간
     public GameObject caster; // 스킬 쓴 사람
-    [Header("🔊 오디오 설정")] // [추가됨]
+    [Header("🔊 오디오 설정")] 
     public AudioClip hitSound; // 타격음 (drumhit.mp3 연결)
     private AudioSource audioSource;
 
@@ -42,7 +42,7 @@ public class DrumSkill : MonoBehaviour
                 PlayerKick enemy = other.GetComponent<PlayerKick>();
                 if (enemy != null)
                 {
-                    // [🔥 핵심 추가!] 타격음 재생
+                    // 타격음 재생
                     if (audioSource != null && hitSound != null)
                     {
                         audioSource.PlayOneShot(hitSound);

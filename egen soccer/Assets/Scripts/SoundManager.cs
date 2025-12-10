@@ -8,8 +8,8 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        // [수정됨] 싱글톤(중복 방지) 코드 삭제! 
-        // 이제 각 씬마다 있는 SoundManager가 각자 알아서 일합니다.
+        // 싱글톤(중복 방지) 코드 삭제! 
+        // 이제 각 씬마다 있는 SoundManager가 각자 일
 
         audioSource = GetComponent<AudioSource>();
         

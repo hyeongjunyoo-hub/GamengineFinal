@@ -17,7 +17,7 @@ public class BallSound : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         
-        // 3D 입체 음향 끄기 (2D 게임이니까)
+        // 3D 입체 음향 끄기
         audioSource.spatialBlend = 0f; 
         audioSource.playOnAwake = false;
 
