@@ -53,7 +53,9 @@ public class PlayerKick : MonoBehaviour
     public AudioClip hurtSound;
     // [🔥 핵심] 스킬 목소리
     public AudioClip skillVoiceClip; 
-    private AudioSource audioSource; 
+    private AudioSource audioSource;
+    [Range(0.0f, 3.0f)] 
+    public float skillVoiceVolume = 1.0f;
 
     [Header("😵 상태이상 설정")]
     public int maxHitCount = 4; 
@@ -66,6 +68,7 @@ public class PlayerKick : MonoBehaviour
     private float slowDuration = 5.0f;
     private float originSpeed;
     private float originJump;
+    private GameObject currentBuddhaObject;
     private SpriteRenderer spriteRenderer; 
 
     [Header("⚡ 스킬 설정")]
@@ -142,7 +145,9 @@ public class PlayerKick : MonoBehaviour
                 if (audioSource != null)
                 {
                     if (skillSound != null) audioSource.PlayOneShot(skillSound);
-                    if (skillVoiceClip != null) audioSource.PlayOneShot(skillVoiceClip);
+                    if (skillVoiceClip != null) 
+                        audioSource.PlayOneShot(skillVoiceClip, skillVoiceVolume);
+
                 }
 
                 float currentDuration = 0f;
@@ -335,48 +340,41 @@ void UseJeonSkill()
     }
 
     // 3. 슬로우 코루틴 (상태이상 지속 시간 담당)
+    // [PlayerKick.cs] SlowRoutine 함수 전체를 이걸로 교체하거나 수정하세요.
+
     IEnumerator SlowRoutine(GameObject effectPrefab)
     {
-        if (isSlowed) yield break; // 이미 느려진 상태면 중복 적용 X
+        if (isSlowed) yield break; 
 
         isSlowed = true; 
-        moveSpeed = originSpeed * 0.3f; // 속도 감소
-        jumpForce = originJump * 0.5f;  // 점프 감소
+        moveSpeed = originSpeed * 0.3f; 
+        jumpForce = originJump * 0.5f;  
         UpdateColor(); 
 
-        GameObject myBuddha = null; // 소환된 부처님을 담을 변수
+        // [🔥 수정됨] 지역 변수 선언(GameObject myBuddha)을 삭제하고, 위에서 만든 멤버 변수 사용
+        currentBuddhaObject = null; 
 
-        // [🔥 핵심 로직] 이펙트(부처)가 존재하면 내 머리 위에 소환
         if (effectPrefab != null)
         {
-            // 1. 내 위치(transform)에 생성
-            myBuddha = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+            // 변수에 저장해둡니다 (그래야 ResetStatus에서 지울 수 있음)
+            currentBuddhaObject = Instantiate(effectPrefab, transform.position, Quaternion.identity);
             
-            // 2. 나(플레이어)를 부모로 설정 -> 내가 움직이면 같이 따라다님
-            myBuddha.transform.SetParent(this.transform);
-
-            // 3. 머리 위로 위치 조정 (Y값 2.5f 정도면 머리 위, 필요시 조절)
-            myBuddha.transform.localPosition = new Vector3(0, 6.0f, 0);
-
-            // 4. [중요] 스케일 보정 (내가 뒤집혀 있어도 부처님은 찌그러지지 않게)
-            // 부모 스케일의 영향을 받지 않도록 1,1,1로 초기화하되, 방향 고려
-            // (부처님 이미지가 좌우 대칭이라면 그냥 1,1,1로 둬도 무방)
-            myBuddha.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
+            currentBuddhaObject.transform.SetParent(this.transform);
+            currentBuddhaObject.transform.localPosition = new Vector3(0, 4.0f, 0); // 높이 조절한 값
+            currentBuddhaObject.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f); // 크기 조절한 값
         }
 
-        // --- 상태이상 지속 시간 대기 ---
         yield return new WaitForSeconds(slowDuration);
 
-        // --- 상태이상 종료 ---
+        // 정상적으로 시간이 다 흘러서 끝났을 때의 처리
         moveSpeed = originSpeed; 
         jumpForce = originJump; 
         isSlowed = false; 
         UpdateColor();
 
-        // [🔥 종료 처리] 상태이상이 풀렸으니 머리 위 부처님도 삭제
-        if (myBuddha != null)
+        if (currentBuddhaObject != null)
         {
-            Destroy(myBuddha);
+            Destroy(currentBuddhaObject);
         }
     }
 
@@ -408,6 +406,11 @@ void UseJeonSkill()
         transform.localScale = new Vector3(1f * facingDirection, 1f, 1f);
         moveSpeed = originSpeed; jumpForce = originJump; ResetControls();
         DrumSkill attachedDrum = GetComponentInChildren<DrumSkill>(); if (attachedDrum != null) Destroy(attachedDrum.gameObject);
+        if (currentBuddhaObject != null)
+        {
+            Destroy(currentBuddhaObject);
+            currentBuddhaObject = null; // 변수 비우기
+        }
     }
 
     public void PlayKickSoundEffect()
