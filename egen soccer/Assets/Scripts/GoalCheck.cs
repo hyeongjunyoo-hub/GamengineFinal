@@ -7,21 +7,22 @@ public class GoalCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Ball"))
+        if (other.CompareTag("Ball")==false)
         {
-            // BoxCollider2D 대신 모든 콜라이더의 부모인 Collider2D를 off
-            GetComponent<Collider2D>().enabled = false;
+            return;
+        }
+        Debug.Log("골인 감지됨! 들어온 물체: " + other.name);
+        GetComponent<Collider2D>().enabled = false;
 
-            if (isLeftGoal)
-            {
-                Debug.Log("왼쪽 골대 골인! Player 2 득점!");
-                GameManager.instance.AddScore(2); 
-            }
-            else
-            {
-                Debug.Log("오른쪽 골대 골인! Player 1 득점!");
-                GameManager.instance.AddScore(1); 
-            }
+        if (isLeftGoal)
+        {
+            Debug.Log("왼쪽 골대 골인! Player 2 득점!");
+            GameManager.instance.AddScore(2); 
+        }
+        else
+        {
+            Debug.Log("오른쪽 골대 골인! Player 1 득점!");
+            GameManager.instance.AddScore(1); 
         }
     }
 }
