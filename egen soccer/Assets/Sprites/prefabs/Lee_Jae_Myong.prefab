@@ -332,11 +332,14 @@ MonoBehaviour:
   skillSound: {fileID: 8300000, guid: 03ee2124d36331844acdde12edbf6756, type: 3}
   hurtSound: {fileID: 8300000, guid: 77690ae6c5ef74941b451074647f6557, type: 3}
   skillVoiceClip: {fileID: 8300000, guid: f3b07bee80fb64ea9aa2c70f41b45f46, type: 3}
+  skillVoiceVolume: 1.5
   maxHitCount: 4
   stunDuration: 3
   canUseSkill: 1
   drumPrefab: {fileID: 3219170386276540554, guid: 2b2306661ef5ed34fb7680f01b63f3a6, type: 3}
   wallPrefab: {fileID: 0}
+  jeonSkillEffect: {fileID: 0}
+  wonSkillEffectPrefab: {fileID: 0}
   simpleSkillEffectPrefab: {fileID: 0}
   skillKey: 114
   skillCooldown: 10

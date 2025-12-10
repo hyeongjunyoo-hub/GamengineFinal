@@ -217,6 +217,7 @@ MonoBehaviour:
   skillSound: {fileID: 8300000, guid: 3ecbf9ee00f01c84486546372e00aa32, type: 3}
   hurtSound: {fileID: 8300000, guid: fcde6b4876742104a9fa8b10700ba03f, type: 3}
   skillVoiceClip: {fileID: 8300000, guid: de95061f710b64ce994689846824c100, type: 3}
+  skillVoiceVolume: 3
   maxHitCount: 4
   stunDuration: 3
   canUseSkill: 1
